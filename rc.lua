@@ -44,6 +44,7 @@ end
 
 run_once("urxvtd")
 run_once("unclutter -root")
+run_once("xcompmgr -c")
 -- }}}
 
 -- {{{ Variable definitions
@@ -586,7 +587,7 @@ awful.rules.rules = {
                      buttons = clientbuttons,
 	                   size_hints_honor = false } },
     { rule = { class = "URxvt" },
-          properties = { opacity = 0.99 } },
+          properties = { opacity = 0.5 } },
 
     { rule = { class = "MPlayer" },
           properties = { floating = true } },

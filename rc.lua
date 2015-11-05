@@ -149,7 +149,7 @@ mpdwidget = lain.widgets.mpd({
 memicon = wibox.widget.imagebox(beautiful.widget_mem)
 memwidget = lain.widgets.mem({
     settings = function()
-        widget:set_text(" " .. mem_now.used .. "MB ")
+        widget:set_text(" " .. mem_now.used .. " MB ")
     end
 })
 
@@ -165,7 +165,7 @@ cpuwidget = lain.widgets.cpu({
 tempicon = wibox.widget.imagebox(beautiful.widget_temp)
 tempwidget = lain.widgets.temp({
     settings = function()
-        widget:set_text(" " .. coretemp_now .. "°C ")
+        widget:set_text(" " .. coretemp_now .. " C ")
     end
 })
 
@@ -315,13 +315,10 @@ for s = 1, screen.count() do
     right_layout:add(arrl)
     right_layout_add(mpdicon, mpdwidget)
     right_layout_add(volicon, volumewidget)
-    --right_layout_add(mailicon, mailwidget)
     right_layout_add(memicon, memwidget)
     right_layout_add(cpuicon, cpuwidget)
     right_layout_add(tempicon, tempwidget)
-    right_layout_add(fsicon, fswidget)
     right_layout_add(baticon, batwidget)
-    right_layout_add(neticon,netwidget)
     right_layout_add(mytextclock, spr)
     right_layout_add(mylayoutbox[s])
 
@@ -393,7 +390,7 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Show Menu
-    awful.key({ modkey }, "w",
+    awful.key({ modkey }, "a",
         function ()
             mymainmenu:show({ keygrabber = true })
         end),
@@ -436,23 +433,22 @@ globalkeys = awful.util.table.join(
 
     -- Widgets popups
     awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
-    awful.key({ altkey,           }, "h",      function () fswidget.show(7) end),
 
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end),
 
     -- ALSA volume control
-    awful.key({ altkey }, "Up",
+    awful.key({ modkey }, "Up",
         function ()
             os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
             volumewidget.update()
         end),
-    awful.key({ altkey }, "Down",
+    awful.key({ modkey }, "Down",
         function ()
             os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
             volumewidget.update()
         end),
-    awful.key({ altkey }, "m",
+    awful.key({ modkey }, "m",
         function ()
             os.execute(string.format("amixer set %s toggle", volumewidget.channel))
             volumewidget.update()
@@ -489,7 +485,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "c", function () os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
-    awful.key({ modkey }, "q", function () awful.util.spawn(browser) end),
+    awful.key({ modkey }, "w", function () awful.util.spawn(browser) end),
     awful.key({ modkey }, "i", function () awful.util.spawn(browser2) end),
     awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end),
     awful.key({ modkey }, "g", function () awful.util.spawn(graphics) end),
@@ -507,7 +503,7 @@ globalkeys = awful.util.table.join(
 
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
-    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
+    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),

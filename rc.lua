@@ -8,6 +8,7 @@ local beautiful = require("beautiful")
 local naughty   = require("naughty")
 local drop      = require("scratchdrop")
 local lain      = require("lain")
+local menubar   = require("menubar")
 -- }}}
 
 -- {{{ Error handling
@@ -92,6 +93,11 @@ if beautiful.wallpaper then
         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
     end
 end
+-- }}}
+
+
+-- Menubar configuration
+menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Menu
@@ -432,6 +438,9 @@ globalkeys = awful.util.table.join(
     -- Widgets popups
     awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
     awful.key({ altkey,           }, "h",      function () fswidget.show(7) end),
+
+    -- Menubar
+    awful.key({ modkey }, "p", function() menubar.show() end),
 
     -- ALSA volume control
     awful.key({ altkey }, "Up",

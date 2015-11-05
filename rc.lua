@@ -1,10 +1,3 @@
---[[
-                                             
-     Powerarrow Darker Awesome WM config 2.0 
-     github.com/copycat-killer               
-                                             
---]]
-
 -- {{{ Required libraries
 local gears     = require("gears")
 local awful     = require("awful")
@@ -125,27 +118,6 @@ mytextclock = lain.widgets.abase({
 -- calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 10 })
 
--- Mail IMAP check
-mailicon = wibox.widget.imagebox(beautiful.widget_mail)
-mailicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(mail) end)))
---[[ commented because it needs to be set before use
-mailwidget = lain.widgets.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        if mailcount > 0 then
-            widget:set_text(" " .. mailcount .. " ")
-            mailicon:set_image(beautiful.widget_mail_on)
-        else
-            widget:set_text("")
-            mailicon:set_image(beautiful.widget_mail)
-        end
-    end
-})
-]]
-
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
 mpdicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
@@ -192,14 +164,6 @@ tempwidget = lain.widgets.temp({
     end
 })
 
--- / fs
-fsicon = wibox.widget.imagebox(beautiful.widget_hdd)
-fswidget = lain.widgets.fs({
-    settings  = function()
-        widget:set_text(" " .. fs_now.used .. "% ")
-    end
-})
-
 -- Battery
 baticon = wibox.widget.imagebox(beautiful.widget_battery)
 batwidget = lain.widgets.bat({
@@ -237,16 +201,6 @@ volumewidget = lain.widgets.alsa({
     end
 })
 
--- Net
-neticon = wibox.widget.imagebox(beautiful.widget_net)
-neticon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(iptraf) end)))
-netwidget = lain.widgets.net({
-    settings = function()
-        widget:set_markup(markup("#7AC82E", " " .. net_now.received)
-                          .. " " ..
-                          markup("#46A8C3", " " .. net_now.sent .. " "))
-    end
-})
 
 -- Separators
 spr = wibox.widget.textbox(' ')

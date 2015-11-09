@@ -45,6 +45,7 @@ end
 run_once("urxvtd")
 run_once("unclutter -root")
 run_once("xcompmgr -c")
+run_once("skype")
 -- }}}
 
 -- {{{ Variable definitions
@@ -150,7 +151,7 @@ mpdwidget = lain.widgets.mpd({
 memicon = wibox.widget.imagebox(beautiful.widget_mem)
 memwidget = lain.widgets.mem({
     settings = function()
-        widget:set_text(" " .. mem_now.used .. " MB ")
+        widget:set_text(" " .. mem_now.free .. " MB ")
     end
 })
 
@@ -587,7 +588,7 @@ awful.rules.rules = {
                      buttons = clientbuttons,
 	                   size_hints_honor = false } },
     { rule = { class = "URxvt" },
-          properties = { opacity = 0.5 } },
+          properties = { opacity = 1 } },
 
     { rule = { class = "MPlayer" },
           properties = { floating = true } },

@@ -46,6 +46,9 @@ run_once("urxvtd")
 run_once("unclutter -root")
 run_once("xcompmgr -c")
 run_once("skype")
+run_once("mopidy")
+run_once("numlockx on")
+
 -- }}}
 
 -- {{{ Variable definitions
@@ -57,15 +60,14 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/theme/theme.lua")
 modkey     = "Mod4"
 altkey     = "Mod1"
 terminal   = "urxvtc" or "xterm"
-editor     = os.getenv("EDITOR") or "nano" or "vi"
+editor     = "mcedit" or "nano" or "vi"
 editor_cmd = terminal .. " -e " .. editor
 
 -- user defined
-browser    = "dwb"
-browser2   = "iron"
-gui_editor = "gvim"
+browser    = "firefox"
+browser2   = "chromium"
+gui_editor = "subl"
 graphics   = "gimp"
-mail       = terminal .. " -e mutt "
 iptraf     = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
 musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
 
@@ -313,8 +315,6 @@ for s = 1, screen.count() do
 
     right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(spr)
-    right_layout:add(arrl)
     right_layout_add(mpdicon, mpdwidget)
     right_layout_add(volicon, volumewidget)
     right_layout_add(memicon, memwidget)
@@ -360,7 +360,6 @@ globalkeys = awful.util.table.join(
     -- Default client focus
     awful.key({ altkey }, "k",
         function ()
-            awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
         end),
     awful.key({ altkey }, "j",
@@ -452,7 +451,7 @@ globalkeys = awful.util.table.join(
         end),
     awful.key({ modkey }, "m",
         function ()
-            os.execute(string.format("amixer set %s toggle", volumewidget.channel))
+            os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey, "Control" }, "m",
@@ -487,6 +486,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "c", function () os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
+    awful.key({ altkey, "Control" }, "l", function () os.execute("amixer -D pulse set Master 1+ toggle && i3lock && xset dpms force off") end),
     awful.key({ modkey }, "w", function () awful.util.spawn(browser) end),
     awful.key({ modkey }, "i", function () awful.util.spawn(browser2) end),
     awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end),
@@ -587,27 +587,9 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons,
 	                   size_hints_honor = false } },
-    { rule = { class = "URxvt" },
-          properties = { opacity = 1 } },
-
-    { rule = { class = "MPlayer" },
-          properties = { floating = true } },
-
-    { rule = { class = "Dwb" },
+    { rule = { class = "Firefox" },
           properties = { tag = tags[1][1] } },
 
-    { rule = { class = "Iron" },
-          properties = { tag = tags[1][1] } },
-
-    { rule = { instance = "plugin-container" },
-          properties = { tag = tags[1][1] } },
-
-	  { rule = { class = "Gimp" },
-     	    properties = { tag = tags[1][4] } },
-
-    { rule = { class = "Gimp", role = "gimp-image-window" },
-          properties = { maximized_horizontal = true,
-                         maximized_vertical = true } },
 }
 -- }}}
 

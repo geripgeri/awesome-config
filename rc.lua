@@ -62,10 +62,14 @@ altkey     = "Mod1"
 terminal   = "urxvtc" or "xterm"
 editor     = "mcedit" or "nano" or "vi"
 editor_cmd = terminal .. " -e " .. editor
+lock_command = "amixer -D pulse set Master 1+ toggle && xset dpms force off && i3lock -e -f -c 000000"
 
 -- user defined
 browser    = "firefox"
-browser2   = "chromium"
+browser_incognito = "firefox --private-window"
+browser2 = "chromium"
+browser2_incognito = "chromium --incognito"
+file_namager = "nautilus"
 gui_editor = "subl"
 graphics   = "gimp"
 iptraf     = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
@@ -486,12 +490,16 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "c", function () os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
-    awful.key({ altkey, "Control" }, "l", function () os.execute("amixer -D pulse set Master 1+ toggle && i3lock && xset dpms force off") end),
+    awful.key({ altkey, "Control" }, "l", function () os.execute(lock_command) end),
     awful.key({ modkey }, "w", function () awful.util.spawn(browser) end),
+    awful.key({ modkey, "Control" }, "w", function () awful.util.spawn(browser_incognito) end),
     awful.key({ modkey }, "i", function () awful.util.spawn(browser2) end),
+    awful.key({ modkey, "Control" }, "i", function () awful.util.spawn(browser2_incognito) end),
     awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end),
     awful.key({ modkey }, "g", function () awful.util.spawn(graphics) end),
+    awful.key({ modkey }, "e", function () awful.util.spawn(file_namager) end),
 
+    
     -- Prompt
     awful.key({ modkey }, "r", function () mypromptbox[mouse.screen]:run() end),
     awful.key({ modkey }, "x",

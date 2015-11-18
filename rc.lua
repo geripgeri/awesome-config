@@ -48,6 +48,8 @@ run_once("xcompmgr -c")
 run_once("skype")
 run_once("mopidy")
 run_once("numlockx on")
+run_once("nm-applet")
+run_once("dropbox")
 
 -- }}}
 
@@ -86,12 +88,19 @@ local layouts = {
 
 -- {{{ Tags
 tags = {
-   names = { "1", "2", "3", "4", "5"},
-   layout = { layouts[1], layouts[2], layouts[3], layouts[1], layouts[4] }
-}
+   settings = {
+     { names  = { "www", "IDE", "editor", "im" },
+       layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
+     },
+     { names  = { "im", "files" },
+       layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
+     },
+     { names  = { "www",  "editor",  "mail" },
+       layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
+}}}
 
 for s = 1, screen.count() do
-   tags[s] = awful.tag(tags.names, s, tags.layout)
+    tags[s] = awful.tag(tags.settings[s].names, s, tags.settings[s].layout)
 end
 -- }}}
 
@@ -595,8 +604,8 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons,
 	                   size_hints_honor = false } },
-    { rule = { class = "Firefox" },
-          properties = { tag = tags[1][1] } },
+  --  { rule = { class = "Firefox" },
+  --        properties = { tag = tags[1][1] } },
 
 }
 -- }}}

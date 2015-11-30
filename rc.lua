@@ -459,7 +459,17 @@ globalkeys = awful.util.table.join(
             os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
             volumewidget.update()
         end),
+    awful.key({ }, "XF86AudioRaiseVolume",
+        function ()
+            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            volumewidget.update()
+        end),
     awful.key({ modkey }, "Down",
+        function ()
+            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            volumewidget.update()
+        end),
+    awful.key({ }, "XF86AudioLowerVolume",
         function ()
             os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
             volumewidget.update()
@@ -469,7 +479,12 @@ globalkeys = awful.util.table.join(
             os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
             volumewidget.update()
         end),
-    awful.key({ altkey, "Control" }, "m",
+    awful.key({ }, "XF86AudioMute",
+        function ()
+            os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
+            volumewidget.update()
+        end),
+    awful.key({ modkey }, "XF86AudioRaiseVolume",
         function ()
             os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
             volumewidget.update()
@@ -477,6 +492,11 @@ globalkeys = awful.util.table.join(
 
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
+        function ()
+            awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
+            mpdwidget.update()
+        end),
+    awful.key({ }, "XF86AudioPlay",
         function ()
             awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
             mpdwidget.update()
@@ -491,7 +511,17 @@ globalkeys = awful.util.table.join(
             awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
             mpdwidget.update()
         end),
+    awful.key({ }, "XF86AudioPrev",
+        function ()
+            awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
+            mpdwidget.update()
+        end),
     awful.key({ altkey, "Control" }, "Right",
+        function ()
+            awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
+            mpdwidget.update()
+        end),
+    awful.key({ }, "XF86AudioNext",
         function ()
             awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
             mpdwidget.update()
@@ -535,11 +565,6 @@ clientkeys = awful.util.table.join(
             -- The client currently has the input focus, so it cannot be
             -- minimized, since minimized clients can't have the focus.
             c.minimized = true
-        end),
-    awful.key({ modkey,           }, "m",
-        function (c)
-            c.maximized_horizontal = not c.maximized_horizontal
-            c.maximized_vertical   = not c.maximized_vertical
         end)
 )
 

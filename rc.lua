@@ -44,12 +44,13 @@ end
 
 run_once("urxvtd")
 run_once("unclutter -root")
-run_once("xcompmgr -c")
+---run_once("xcompmgr -c")
 run_once("skype")
 run_once("mopidy")
 run_once("numlockx on")
 run_once("nm-applet")
 run_once("dropbox")
+run_once("thunderbird")
 
 -- }}}
 
@@ -67,7 +68,8 @@ editor_cmd = terminal .. " -e " .. editor
 lock_command = "amixer -D pulse set Master 1+ toggle && xset dpms force off && i3lock -e -f -c 000000"
 
 -- user defined
-browser    = "firefox"
+browser    = "firefox -P Personal"
+browser_work = "firefox -P Work"
 browser_incognito = "firefox --private-window"
 browser2 = "chromium"
 browser2_incognito = "chromium --incognito"
@@ -501,6 +503,7 @@ globalkeys = awful.util.table.join(
     -- User programs
     awful.key({ altkey, "Control" }, "l", function () os.execute(lock_command) end),
     awful.key({ modkey }, "w", function () awful.util.spawn(browser) end),
+    awful.key({ modkey, "Shift" }, "w", function () awful.util.spawn(browser_work) end),
     awful.key({ modkey, "Control" }, "w", function () awful.util.spawn(browser_incognito) end),
     awful.key({ modkey }, "i", function () awful.util.spawn(browser2) end),
     awful.key({ modkey, "Control" }, "i", function () awful.util.spawn(browser2_incognito) end),

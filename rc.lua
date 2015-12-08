@@ -68,8 +68,8 @@ editor_cmd = terminal .. " -e " .. editor
 lock_command = "amixer -D pulse set Master 1+ toggle && xset dpms force off && i3lock -e -f -c 000000"
 
 -- user defined
-browser    = "firefox -P Personal"
-browser_work = "firefox -P Work"
+browser    = "firefox"
+browser_work = "firefox-aurora"
 browser_incognito = "firefox --private-window"
 browser2 = "chromium"
 browser2_incognito = "chromium --incognito"

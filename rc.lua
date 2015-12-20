@@ -531,7 +531,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "c", function () os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
-    awful.key({ altkey, "Control" }, "l", function () os.execute(lock_command) end),
+    awful.key({ modkey}, "l", function () os.execute(lock_command) end),
     awful.key({ modkey }, "w", function () awful.util.spawn(browser) end),
     awful.key({ modkey, "Shift" }, "w", function () awful.util.spawn(browser_work) end),
     awful.key({ modkey, "Control" }, "w", function () awful.util.spawn(browser_incognito) end),

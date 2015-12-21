@@ -1,3 +1,10 @@
+--[[
+
+     Powerarrow Darker Awesome WM config 2.0
+     github.com/copycat-killer
+
+--]]
+
 -- {{{ Required libraries
 local gears     = require("gears")
 local awful     = require("awful")

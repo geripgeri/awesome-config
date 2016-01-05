@@ -367,8 +367,7 @@ root.buttons(awful.util.table.join(
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     -- Take a screenshot
-    -- https://github.com/copycat-killer/dots/blob/master/bin/screenshot
-    awful.key({ altkey }, "p", function() os.execute("screenshot") end),
+    awful.key({ altkey }, "p", function() awful.util.spawn("gnome-screenshot --interactive") end),
 
     -- Tag browsing
     awful.key({ modkey }, "Left",   awful.tag.viewprev       ),
@@ -406,10 +405,16 @@ globalkeys = awful.util.table.join(
             awful.client.focus.bydirection("left")
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey }, "l",
+--    awful.key({ modkey }, "l",
+--        function()
+--            awful.client.focus.bydirection("right")
+--            if client.focus then client.focus:raise() end
+--        end),
+
+    -- Panic mode, allways switch to screen 1, tag 2 named 'IDE' ;)
+    awful.key({ altkey }, "a",
         function()
-            awful.client.focus.bydirection("right")
-            if client.focus then client.focus:raise() end
+            awful.tag.viewonly(awful.tag.gettags(1)[2])
         end),
 
     -- Show Menu
@@ -496,6 +501,8 @@ globalkeys = awful.util.table.join(
             os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
             volumewidget.update()
         end),
+
+    awful.key({ modkey }, "y", function () os.execute("") end),
 
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",

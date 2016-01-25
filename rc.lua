@@ -142,7 +142,7 @@ mytextclock = lain.widgets.abase({
     timeout  = 60,
     cmd      = "date +'%m.%d. %R'",
     settings = function()
-        widget:set_text(" " .. output)
+        widget:set_markup(" " .. markup("#55FF00", output))
     end
 })
 
@@ -461,6 +461,8 @@ globalkeys = awful.util.table.join(
 
     -- Widgets popups
     awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
+
+    awful.key({ altkey,           }, "x",      function () awful.util.spawn_with_shell(musicplr) end),
 
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end),

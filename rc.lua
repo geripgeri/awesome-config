@@ -85,6 +85,7 @@ gui_editor = "subl"
 graphics   = "gimp"
 iptraf     = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
 musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
+screenshot = "gnome-screenshot --interactive"
 
 local layouts = {
     awful.layout.suit.floating,
@@ -366,8 +367,9 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    -- Take a screenshot
-    awful.key({ altkey }, "p", function() awful.util.spawn("gnome-screenshot --interactive") end),
+    -- Controling Awesome
+    awful.key({ modkey, "Control" }, "r",      awesome.restart),
+    awful.key({ modkey, "Shift"   }, "q",      awesome.quit),
 
     -- Tag browsing
     awful.key({ modkey }, "Left",   awful.tag.viewprev       ),
@@ -453,10 +455,8 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey, "Control" }, "r",      awesome.restart),
-    awful.key({ modkey, "Shift"   }, "q",      awesome.quit),
 
-    -- Dropdown terminal
+    -- Drop down terminal
     awful.key({ modkey,	          }, "z",      function () drop(terminal) end),
 
     -- Widgets popups
@@ -503,8 +503,6 @@ globalkeys = awful.util.table.join(
             os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
             volumewidget.update()
         end),
-
-    awful.key({ modkey }, "y", function () os.execute("") end),
 
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
@@ -556,7 +554,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end),
     awful.key({ modkey }, "g", function () awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function () awful.util.spawn(file_namager) end),
-
+    awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
     
     -- Prompt
     awful.key({ modkey }, "r", function () mypromptbox[mouse.screen]:run() end),

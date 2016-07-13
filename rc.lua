@@ -218,6 +218,7 @@ batwidget = lain.widgets.bat({
 -- ALSA volume
 volicon = wibox.widget.imagebox(beautiful.widget_vol)
 volumewidget = lain.widgets.alsa({
+    cmd = "amixer -c HDMI -D pulse",
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(beautiful.widget_vol_mute)
@@ -470,37 +471,37 @@ globalkeys = awful.util.table.join(
     -- ALSA volume control
     awful.key({ modkey }, "Up",
         function ()
-            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            os.execute(string.format("%s set %s 1%%+", volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            os.execute(string.format("%s set %s 1%%+", volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ modkey }, "Down",
         function ()
-            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            os.execute(string.format("%s set %s 1%%-",volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            os.execute(string.format("%s set %s 1%%-",volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ modkey }, "m",
         function ()
-            os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
+            os.execute(string.format("%s set %s 1+ toggle",volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
+            os.execute(string.format("%s set %s 1+ toggle",volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ modkey }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
+            os.execute(string.format("%s set %s 100%%",volumewidget.cmd, volumewidget.channel))
             volumewidget.update()
         end),
 

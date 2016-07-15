@@ -463,7 +463,7 @@ globalkeys = awful.util.table.join(
     -- Widgets popups
     awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
 
-    awful.key({ altkey,           }, "x",      function () awful.util.spawn_with_shell(musicplr) end),
+    --awful.key({ altkey,           }, "x",      function () awful.util.spawn_with_shell(musicplr) end),
 
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end),
@@ -638,19 +638,64 @@ root.keys(globalkeys)
 -- }}}
 
 -- {{{ Rules
-awful.rules.rules = {
-    -- All clients will match this rule.
+-- Use xprop | grep WM_CLASS to find the class name.
+if screen.count() == 3 then
+  awful.rules.rules = {
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
                      buttons = clientbuttons,
-	                   size_hints_honor = false } },
-  --  { rule = { class = "Firefox" },
-  --        properties = { tag = tags[1][1] } },
-
-}
+                     size_hints_honor = false } },
+    { rule = { class = "Thunderbird" },
+      properties = { tag = tags[3][3] } },
+    { rule = { class = "Skype" },
+      properties = { tag = tags[2][1] } },
+    { rule = { class = "telegram-desktop" },
+      properties = { tag = tags[2][1] } },
+    { rule = { class = "Emacs" },
+      properties = { tag = tags[3][2] } },
+    { rule = { class = "sublime_text" },
+      properties = { tag = tags[3][2] } }
+  }
+elseif screen.count == 2 then
+  awful.rules.rules = {
+    { rule = { },
+      properties = { border_width = beautiful.border_width,
+                     border_color = beautiful.border_normal,
+                     focus = awful.client.focus.filter,
+                     keys = clientkeys,
+                     buttons = clientbuttons,
+                     size_hints_honor = false } },
+    { rule = { class = "Skype" },
+      properties = { tag = tags[2][1] } },
+    { rule = { class = "telegram-desktop" },
+      properties = { tag = tags[2][1] } },
+    { rule = { class = "Emacs" },
+      properties = { tag = tags[1][3] } },
+    { rule = { class = "sublime_text" },
+      properties = { tag = tags[1][3] } }
+  }
+else
+  awful.rules.rules = {
+    { rule = { },
+      properties = { border_width = beautiful.border_width,
+                     border_color = beautiful.border_normal,
+                     focus = awful.client.focus.filter,
+                     keys = clientkeys,
+                     buttons = clientbuttons,
+                     size_hints_honor = false } },
+    { rule = { class = "Skype" },
+      properties = { tag = tags[1][4] } },
+    { rule = { class = "telegram-desktop" },
+      properties = { tag = tags[1][4] } },
+    { rule = { class = "Emacs" },
+      properties = { tag = tags[1][3] } },
+    { rule = { class = "sublime_text" },
+      properties = { tag = tags[1][3] } }
+  }
+end
 -- }}}
 
 -- {{{ Signals

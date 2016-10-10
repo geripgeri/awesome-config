@@ -137,18 +137,34 @@ markup = lain.util.markup
 separators = lain.util.separators
 
 -- Textclock
-clockicon = wibox.widget.imagebox(beautiful.widget_clock)
+--clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 
-mytextclock = lain.widgets.abase({
-    timeout  = 60,
-    cmd      = "date +'%m.%d. %R'",
+date = lain.widgets.abase({
+    timeout  = 30,
+    cmd      = "date +'%m.%d'",
+    settings = function()
+        widget:set_markup(" " .. markup("#55FF00", output))
+    end
+})
+
+clockTZ1 = lain.widgets.abase({
+    timeout  = 30,
+    cmd      = "TZ=Europe/London date +'%R'",
+    settings = function()
+        widget:set_markup(" " .. markup("#FF0000", output))
+    end
+})
+
+clockTZ2 = lain.widgets.abase({
+    timeout  = 30,
+    cmd      = "date +'%R'",
     settings = function()
         widget:set_markup(" " .. markup("#55FF00", output))
     end
 })
 
 -- calendar
-lain.widgets.calendar:attach(mytextclock, { font_size = 10 })
+--lain.widgets.calendar:attach(mytextclock, { font_size = 10 })
 
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
@@ -345,7 +361,9 @@ for s = 1, screen.count() do
     right_layout_add(cpuicon, cpuwidget)
     right_layout_add(tempicon, tempwidget)
     right_layout_add(baticon, batwidget)
-    right_layout_add(mytextclock, spr)
+    right_layout_add(date, spr)
+    right_layout_add(clockTZ1)
+    right_layout_add(clockTZ2,spr)
     right_layout_add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)

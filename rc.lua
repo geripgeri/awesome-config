@@ -85,7 +85,7 @@ gui_editor = "subl"
 graphics   = "gimp"
 iptraf     = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
 musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
-screenshot = "gnome-screenshot --interactive"
+screenshot = "spectacle -g"
 
 local layouts = {
     awful.layout.suit.floating,

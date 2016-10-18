@@ -187,6 +187,8 @@ mpdwidget = lain.widgets.mpd({
         widget:set_markup(markup("#EA6F81", artist) .. title)
     end
 })
+mpdwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
+
 
 -- MEM
 memicon = wibox.widget.imagebox(beautiful.widget_mem)

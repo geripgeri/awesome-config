@@ -83,8 +83,8 @@ browser2_incognito = "chromium --incognito"
 file_namager = "nautilus"
 gui_editor = "subl"
 graphics   = "gimp"
-iptraf     = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
 musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
+top        = terminal .. " -g 130x34-320+16 -e top"
 screenshot = "spectacle -g"
 
 local layouts = {
@@ -137,8 +137,6 @@ markup = lain.util.markup
 separators = lain.util.separators
 
 -- Textclock
---clockicon = wibox.widget.imagebox(beautiful.widget_clock)
-
 date = lain.widgets.abase({
     timeout  = 10,
     cmd      = "date +'%m.%d'",
@@ -163,8 +161,15 @@ clockTZ2 = lain.widgets.abase({
     end
 })
 
--- calendar
---lain.widgets.calendar:attach(mytextclock, { font_size = 10 })
+taskicon = wibox.widget.imagebox(beautiful.widget_task)
+
+taskwidget = lain.widgets.abase({
+    timeout  = 60,
+    cmd      = "wunderline today | grep Today | wc -l",
+    settings = function()
+        widget:set_markup(markup("#55FF00", output))
+    end
+})
 
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
@@ -206,9 +211,15 @@ cpuwidget = lain.widgets.cpu({
     end
 })
 
+cpuicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(top) end)))
+cpuwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(top) end)))
+
+
 -- Coretemp
 tempicon = wibox.widget.imagebox(beautiful.widget_temp)
 tempwidget = lain.widgets.temp({
+    tempfile = "/sys/class/thermal/thermal_zone1/temp",
+    timeout = 10,
     settings = function()
         widget:set_text(" " .. coretemp_now .. " C ")
     end
@@ -218,7 +229,7 @@ tempwidget = lain.widgets.temp({
 baticon = wibox.widget.imagebox(beautiful.widget_battery)
 batwidget = lain.widgets.bat({
     settings = function()
-        if bat_now.perc == "N/A" then
+        if bat_now.perc == "N/A" or bat_now.status  == "Full" or bat_now.status == "Charging" then
             widget:set_markup(" AC ")
             baticon:set_image(beautiful.widget_ac)
             return
@@ -229,14 +240,13 @@ batwidget = lain.widgets.bat({
         else
             baticon:set_image(beautiful.widget_battery)
         end
-        widget:set_markup(" " .. bat_now.perc .. "% ")
+        widget:set_markup(bat_now.time .. " / " .. bat_now.perc .. "% ")
     end
 })
 
 -- ALSA volume
 volicon = wibox.widget.imagebox(beautiful.widget_vol)
 volumewidget = lain.widgets.alsa({
-    cmd = "amixer -c HDMI -D pulse",
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(beautiful.widget_vol_mute)
@@ -248,7 +258,7 @@ volumewidget = lain.widgets.alsa({
             volicon:set_image(beautiful.widget_vol)
         end
 
-        widget:set_text(" " .. volume_now.level .. "% ")
+        widget:set_text(volume_now.level .. "% ")
     end
 })
 
@@ -366,6 +376,7 @@ for s = 1, screen.count() do
     right_layout_add(date, spr)
     right_layout_add(clockTZ1)
     right_layout_add(clockTZ2,spr)
+    right_layout_add(taskicon, taskwidget, spr)
     right_layout_add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)

@@ -140,7 +140,7 @@ separators = lain.util.separators
 --clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 
 date = lain.widgets.abase({
-    timeout  = 30,
+    timeout  = 10,
     cmd      = "date +'%m.%d'",
     settings = function()
         widget:set_markup(" " .. markup("#55FF00", output))
@@ -148,7 +148,7 @@ date = lain.widgets.abase({
 })
 
 clockTZ1 = lain.widgets.abase({
-    timeout  = 30,
+    timeout  = 10,
     cmd      = "TZ=Europe/London date +'%R'",
     settings = function()
         widget:set_markup(" " .. markup("#FF0000", output))
@@ -156,7 +156,7 @@ clockTZ1 = lain.widgets.abase({
 })
 
 clockTZ2 = lain.widgets.abase({
-    timeout  = 30,
+    timeout  = 60,
     cmd      = "date +'%R'",
     settings = function()
         widget:set_markup(" " .. markup("#55FF00", output))

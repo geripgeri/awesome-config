@@ -85,6 +85,7 @@ gui_editor = "subl"
 graphics   = "gimp"
 musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
 top        = terminal .. " -g 130x34-320+16 -e top"
+tasks      = browser .. " https://www.wunderlist.com/#/lists/today"
 screenshot = "spectacle -g"
 
 local layouts = {
@@ -167,9 +168,16 @@ taskwidget = lain.widgets.abase({
     timeout  = 60,
     cmd      = "wunderline today | grep Today | wc -l",
     settings = function()
-        widget:set_markup(markup("#55FF00", output))
+        widget:set_markup("Today(" .. markup("#55FF00", output) .. ")")
     end
 })
+taskwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(tasks) end)))
+
+taskwidget:connect_signal("mouse::enter", function()
+    local handle = io.popen("wunderline today | grep  -oP '.*(?=Today)' | sort")
+    naughty.notify({ text = handle:read("*all")})
+end)
+
 
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
@@ -373,10 +381,10 @@ for s = 1, screen.count() do
     right_layout_add(cpuicon, cpuwidget)
     right_layout_add(tempicon, tempwidget)
     right_layout_add(baticon, batwidget)
+    right_layout_add(taskicon, taskwidget, spr)
     right_layout_add(date, spr)
     right_layout_add(clockTZ1)
     right_layout_add(clockTZ2,spr)
-    right_layout_add(taskicon, taskwidget, spr)
     right_layout_add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
@@ -587,7 +595,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "g", function () awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function () awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    
+
     -- Prompt
     awful.key({ modkey }, "r", function () mypromptbox[mouse.screen]:run() end),
     awful.key({ modkey }, "x",

@@ -117,13 +117,25 @@ end
 -- }}}
 
 -- {{{ Wallpaper
-if beautiful.wallpaper then
-    for s = 1, screen.count() do
-        gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+if beautiful.wallpaper_c then
+    if screen.count() == 3 then
+        gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
+        gears.wallpaper.maximized(beautiful.wallpaper_c, 2, true)
+        gears.wallpaper.maximized(beautiful.wallpaper_l, 3, true)
+    elseif screen.count() == 2 then
+        gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
+        gears.wallpaper.maximized(beautiful.wallpaper_l, 2, true)
+    else
+        gears.wallpaper.maximized(beautiful.wallpaper_c, 1, true)
     end
 end
 -- }}}
 
+-- {{{ Fuction for open terminal and stay opens after command returns
+function open_terminal_and_hold (cmd)
+    awful.util.spawn(terminal .. " -e " .. shell .. " -c \"" .. cmd .. " && " .. shell .. "\"")
+end
+-- }}}
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it

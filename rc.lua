@@ -70,8 +70,7 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/theme/theme.lua")
 modkey     = "Mod4"
 altkey     = "Mod1"
 terminal   = "urxvtc" or "xterm"
-editor     = "mcedit" or "nano" or "vi"
-editor_cmd = terminal .. " -e " .. editor
+shell      = "zsh" or "bash"
 lock_command = "amixer -D pulse set Master 1+ toggle && xset dpms force off && i3lock -e -f -c 000000"
 
 -- user defined
@@ -83,9 +82,11 @@ browser2_incognito = "chromium --incognito"
 file_namager = "nautilus"
 gui_editor = "subl"
 graphics   = "gimp"
-musicplr   = terminal .. " -g 130x34-320+16 -e ncmpcpp "
-top        = terminal .. " -g 130x34-320+16 -e top"
-tasks      = browser .. " https://www.wunderlist.com/#/lists/today"
+musicplr   = terminal .. " -e ncmpcpp"
+top        = terminal .. " -e top"
+tasks_for_today = "wunderline today | grep  -oP '.*(?=Today)' | sort"
+openwunderlist      = browser .. " https://www.wunderlist.com/#/lists/today"
+
 screenshot = "spectacle -g"
 
 local layouts = {
@@ -171,12 +172,9 @@ taskwidget = lain.widgets.abase({
         widget:set_markup("Today(" .. markup("#55FF00", output) .. ")")
     end
 })
-taskwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(tasks) end)))
+taskwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () open_terminal_and_hold(tasks_for_today) end)))
+--taskwidget:buttons(awful.util.table.join(awful.button({ }, 2, function () awful.util.spawn(openwunderlist) end)))
 
-taskwidget:connect_signal("mouse::enter", function()
-    local handle = io.popen("wunderline today | grep  -oP '.*(?=Today)' | sort")
-    naughty.notify({ text = handle:read("*all")})
-end)
 
 
 -- MPD
@@ -248,7 +246,7 @@ batwidget = lain.widgets.bat({
         else
             baticon:set_image(beautiful.widget_battery)
         end
-        widget:set_markup(bat_now.time .. " / " .. bat_now.perc .. "% ")
+        widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
     end
 })
 

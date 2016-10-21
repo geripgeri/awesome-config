@@ -190,6 +190,19 @@ taskwidget:buttons(awful.util.table.join(
     awful.util.table.join(awful.button({ }, 3, function () awful.util.spawn(openwunderlist) end))
 ))
 
+kbdlayout = lain.widgets.contrib.kbdlayout({
+    layouts = { { layout = "us"},
+        { layout = "hu" } },
+    settings = function()
+        if kbdlayout_now.variant then
+            widget:set_text(" " .. kbdlayout_now.layout ..
+                    "/" .. kbdlayout_now.variant .. " ")
+        else
+            widget:set_text(" " .. kbdlayout_now.layout .. " ")
+        end
+    end
+})
+
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
 mpdicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
@@ -361,6 +374,7 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the upper left
     local left_layout = wibox.layout.fixed.horizontal()
+    left_layout:add(mylayoutbox[s])
     left_layout:add(spr)
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
@@ -396,7 +410,7 @@ for s = 1, screen.count() do
     right_layout_add(date, spr)
     right_layout_add(clockTZ1)
     right_layout_add(clockTZ2,spr)
-    right_layout_add(mylayoutbox[s])
+    right_layout_add(kbdlayout)
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -606,6 +620,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "g", function () awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function () awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
+    awful.key({"Control"}, "Shift_R", function () kbdlayout.next() end),
 
     -- Prompt
     awful.key({ modkey }, "r", function () mypromptbox[mouse.screen]:run() end),

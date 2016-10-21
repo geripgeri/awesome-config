@@ -184,10 +184,11 @@ taskwidget = lain.widgets.abase({
         widget:set_markup("Today(" .. markup("#55FF00", output) .. ")")
     end
 })
-taskwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () open_terminal_and_hold(tasks_for_today) end)))
---taskwidget:buttons(awful.util.table.join(awful.button({ }, 2, function () awful.util.spawn(openwunderlist) end)))
 
-
+taskwidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () open_terminal_and_hold(tasks_for_today) end),
+    awful.util.table.join(awful.button({ }, 3, function () awful.util.spawn(openwunderlist) end))
+))
 
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)

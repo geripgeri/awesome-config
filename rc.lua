@@ -243,7 +243,7 @@ mpdwidget:buttons(awful.util.table.join(awful.button({}, 1, function() awful.uti
 memicon = wibox.widget.imagebox(beautiful.widget_mem)
 memwidget = lain.widgets.mem({
     settings = function()
-        widget:set_text(" " .. mem_now.free .. " MB ")
+        widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
     end
 })
 

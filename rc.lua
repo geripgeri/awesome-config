@@ -89,7 +89,7 @@ graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
 tasks_for_today = "wunderline today | grep  -oP '.*(?=Today)' | sort"
-openwunderlist = browser .. " https://www.wunderlist.com/#/lists/today"
+openwunderlist = "wunderline open"
 
 screenshot = "spectacle -g"
 

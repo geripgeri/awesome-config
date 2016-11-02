@@ -88,7 +88,8 @@ gui_editor = "subl"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
-tasks_for_today = "wunderline today | grep  -oP '.*(?=Today)' | sort"
+tasks_for_today = "wunderline today"
+wunderline_task_count_cmd = "wunderline today | grep -oP '\\([0-9]\\)' | grep -oP '[0-9]' | awk '{ SUM += $1} END { print SUM }'"
 openwunderlist = "wunderline open"
 
 screenshot = "spectacle -g"
@@ -191,7 +192,7 @@ taskicon = wibox.widget.imagebox(beautiful.widget_task)
 
 taskwidget = lain.widgets.abase({
     timeout = 60,
-    cmd = "wunderline today | grep Today | wc -l",
+    cmd = wunderline_task_count_cmd,
     settings = function()
         widget:set_markup("Today(" .. markup("#55FF00", output) .. ")")
     end

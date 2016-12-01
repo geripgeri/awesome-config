@@ -1,3 +1,6 @@
 [submodule "lain"]
 	path = lain
 	url = git://github.com/copycat-killer/lain.git
+[submodule "wiki"]
+	path = wiki
+	url = git@github.com:geripgeri/awesome-config.wiki.git

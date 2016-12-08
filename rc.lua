@@ -628,6 +628,13 @@ globalkeys = awful.util.table.join(-- Controling Awesome
             mpdwidget.update()
         end),
 
+    -- Brightness
+    awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("light -A 10") end),
+    awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("light -U 10") end),
+
+    awful.key({ modkey , altkey }, "Up", function () awful.util.spawn("light -A 10") end),
+    awful.key({ modkey, altkey }, "Down", function () awful.util.spawn("light -U 10") end),
+
     -- Copy to clipboard
     awful.key({ modkey }, "c", function() os.execute("xsel -p -o | xsel -i -b") end),
 

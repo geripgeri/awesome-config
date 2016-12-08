@@ -216,6 +216,22 @@ kbdlayout = lain.widgets.contrib.kbdlayout({
     end
 })
 
+-- Redshift widget
+local rs_on =  beautiful.widget_rs_on
+local rs_off = beautiful.widget_rs_off
+
+myredshift = wibox.widget.imagebox(rs_on)
+lain.widgets.contrib.redshift:attach(
+    myredshift,
+    function ()
+        if lain.widgets.contrib.redshift:is_active() then
+            myredshift:set_image(rs_on)
+        else
+            myredshift:set_image(rs_off)
+        end
+    end
+)
+
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
 mpdicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
@@ -415,6 +431,7 @@ for s = 1, screen.count() do
     right_layout_add(cpuicon, cpuwidget)
     right_layout_add(tempicon, tempwidget)
     right_layout_add(baticon, batwidget)
+    right_layout_add(myredshift)
     right_layout_add(taskicon, taskwidget, spr)
     right_layout_add(date, spr)
     right_layout_add(clockTZ1)
@@ -626,6 +643,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
     awful.key({ altkey}, "Shift_L", function() kbdlayout.next() end),
+    awful.key({ modkey, "Shift"   }, "t",   function () lain.widgets.contrib.redshift:toggle()   end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() mypromptbox[mouse.screen]:run() end),

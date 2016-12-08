@@ -194,7 +194,7 @@ taskwidget = lain.widgets.abase({
     timeout = 60,
     cmd = wunderline_task_count_cmd,
     settings = function()
-        widget:set_markup("Today(" .. markup("#55FF00", output) .. ")")
+        widget:set_markup(markup("#55FF00", output))
     end
 })
 

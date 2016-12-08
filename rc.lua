@@ -625,7 +625,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    awful.key({ "Control" }, "Shift_R", function() kbdlayout.next() end),
+    awful.key({ altkey}, "Shift_L", function() kbdlayout.next() end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() mypromptbox[mouse.screen]:run() end),

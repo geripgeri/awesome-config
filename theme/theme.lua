@@ -78,6 +78,8 @@ theme.widget_vol_mute               = themes_dir .. "/icons/vol_mute.png"
 theme.widget_mail                   = themes_dir .. "/icons/mail.png"
 theme.widget_mail_on                = themes_dir .. "/icons/mail_on.png"
 theme.widget_task                   = themes_dir .. "/icons/task.png"
+theme.widget_rs_on                  = themes_dir .. "/icons/redshift_on.png"
+theme.widget_rs_off                 = themes_dir .. "/icons/redshift_off.png"
 
 theme.tasklist_disable_icon         = true
 theme.tasklist_floating             = ""

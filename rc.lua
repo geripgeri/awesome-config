@@ -305,7 +305,12 @@ tempwidget = lain.widgets.temp({
 baticon = wibox.widget.imagebox(beautiful.widget_battery)
 batwidget = lain.widgets.bat({
     settings = function()
-        widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
+        if tonumber(bat_now.perc) >= 15 then
+            widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
+        else
+            widget:set_markup(markup(waring, bat_now.perc .. "% / " .. bat_now.time))
+        end
+
         if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
             widget:set_markup(" AC ")
             baticon:set_image(beautiful.widget_ac)
@@ -313,7 +318,6 @@ batwidget = lain.widgets.bat({
         elseif tonumber(bat_now.perc) <= 5 then
             baticon:set_image(beautiful.widget_battery_empty)
         elseif tonumber(bat_now.perc) <= 15 then
-            widget:set_markup(markup(waring, bat_now.perc .. "% / " .. bat_now.time))
             baticon:set_image(beautiful.widget_battery_low)
         else
             baticon:set_image(beautiful.widget_battery)

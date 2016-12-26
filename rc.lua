@@ -94,6 +94,9 @@ openwunderlist = "wunderline open"
 
 screenshot = "spectacle -g"
 
+-- Waring color
+waring = beautiful.waring
+
 local layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
@@ -176,7 +179,7 @@ clockTZ1 = lain.widgets.abase({
     timeout = 10,
     cmd = "TZ=Europe/London date +'%R'",
     settings = function()
-        widget:set_markup(" " .. markup("#FF0000", output))
+        widget:set_markup(" " .. markup(waring, output))
     end
 })
 
@@ -260,7 +263,11 @@ mpdwidget:buttons(awful.util.table.join(awful.button({}, 1, function() awful.uti
 memicon = wibox.widget.imagebox(beautiful.widget_mem)
 memwidget = lain.widgets.mem({
     settings = function()
-        widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
+        if mem_now.free >= 0.3 then
+            widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
+        else
+            widget:set_markup(markup(waring, string.format("%.2f", mem_now.free / 1000) .. " GB "))
+        end
     end
 })
 
@@ -268,7 +275,11 @@ memwidget = lain.widgets.mem({
 cpuicon = wibox.widget.imagebox(beautiful.widget_cpu)
 cpuwidget = lain.widgets.cpu({
     settings = function()
-        widget:set_text(" " .. cpu_now.usage .. "% ")
+        if cpu_now.usage <= 80 then
+            widget:set_text(" " .. cpu_now.usage .. "% ")
+        else
+            widget:set_markup(markup(waring, " " .. cpu_now.usage .. "% "))
+        end
     end
 })
 
@@ -282,7 +293,11 @@ tempwidget = lain.widgets.temp({
     tempfile = "/sys/class/thermal/thermal_zone1/temp",
     timeout = 10,
     settings = function()
-        widget:set_text(" " .. coretemp_now .. " C ")
+        if coretemp_now <= 80 then
+            widget:set_text(" " .. coretemp_now .. " C ")
+        else
+            widget:set_markup(markup(waring, " " .. coretemp_now .. " C "))
+        end
     end
 })
 
@@ -290,6 +305,7 @@ tempwidget = lain.widgets.temp({
 baticon = wibox.widget.imagebox(beautiful.widget_battery)
 batwidget = lain.widgets.bat({
     settings = function()
+        widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
         if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
             widget:set_markup(" AC ")
             baticon:set_image(beautiful.widget_ac)
@@ -297,11 +313,11 @@ batwidget = lain.widgets.bat({
         elseif tonumber(bat_now.perc) <= 5 then
             baticon:set_image(beautiful.widget_battery_empty)
         elseif tonumber(bat_now.perc) <= 15 then
+            widget:set_markup(markup(waring, bat_now.perc .. "% / " .. bat_now.time))
             baticon:set_image(beautiful.widget_battery_low)
         else
             baticon:set_image(beautiful.widget_battery)
         end
-        widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
     end
 })
 

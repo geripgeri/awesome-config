@@ -17,6 +17,7 @@ Notable features
 - Fast MPD and volume shortcuts (first time you see this trick in Awesome)
 - Other shortcuts for copying to the clipboard (goodbye clipboard managers!), toggle wiboxes, widgets popups, screenshots capture, moving and magnifying clients
 - Quake drop-down terminal
+- Calendar with current day highlighted and months switch with a click
 - Elegant notifications for new mails, current song, volume level, hdd critical state, low battery
 - Colorful autoupdating icons
 - Symbolic tag names
@@ -31,14 +32,13 @@ Notable features
 - Non-empty tag browsing
 - Dynamic useless gaps
 - Dynamic tagging
-- Wunderlist integration
 
 Based on: Powerarrow Darker inspired by ***[romockee](https://github.com/romockee/powerarrow)***
 
 Gallery
 =======
 
-![preview](https://github.com/geripgeri/awesome-config/blob/master/images/sreenshot.png "Preview")
+![alt text](http://i.imgur.com/kBKV4tx.png "Preview")
 
 Usage
 =====
@@ -50,11 +50,11 @@ Usage
 Installation
 ============
 
-Using git you can have the full master branch:
+Using git you can have the full master branch: ::
 
     git clone --recursive https://github.com/geripgeri/awesome-config.git
 
-then, move the contents of `awesome-config` to `~/.config/awesome`.
+then, move the contents of `awesome-copycats` to `~/.config/awesome`.
 
 
 Notes

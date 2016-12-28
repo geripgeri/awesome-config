@@ -219,6 +219,34 @@ kbdlayout = lain.widgets.contrib.kbdlayout({
     end
 })
 
+-- Countdown widget
+icons_dir = require("lain.helpers").icons_dir
+countdown_normal = icons_dir .. "/countdown/countdown.png"
+countdown_up = icons_dir .. "/countdown/countdown_up.png"
+countdown_icon = wibox.widget.imagebox(countdown_normal)
+countdown_icon:buttons(awful.util.table.join(awful.button({}, 1, function() lain.widgets.contrib.countdown:set_countdown(mypromptbox) end)))
+
+countdown = lain.widgets.contrib.countdown({
+    promptbox = mypromptbox,
+    settings = function()
+        if remaining >= 0 then
+            widget:set_text(" " .. remaining)
+        elseif remaining <= 0 and remaining >= -60 then
+            widget:set_text(" " .. remaining)
+            if remaining % 2 == 1 then
+                countdown_icon:set_image(countdown_normal)
+                widget:set_text(" Time is up")
+            else
+                countdown_icon:set_image(countdown_up)
+                widget:set_markup(markup(waring," Time is up"))
+            end
+        else
+            widget:set_text("")
+            countdown_icon:set_image(countdown_normal)
+        end
+    end
+})
+
 -- Redshift widget
 local rs_on =  beautiful.widget_rs_on
 local rs_off = beautiful.widget_rs_off
@@ -457,6 +485,7 @@ for s = 1, screen.count() do
     right_layout_add(clockTZ1)
     right_layout_add(clockTZ2, spr)
     right_layout_add(kbdlayout)
+    right_layout_add(countdown_icon, countdown)
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -676,8 +705,9 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    awful.key({ altkey}, "Shift_L", function() kbdlayout.next() end),
-    awful.key({ modkey, "Shift"   }, "t",   function () lain.widgets.contrib.redshift:toggle()   end),
+    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() end),
+    awful.key({ modkey, "Shift" }, "t", function() lain.widgets.contrib.redshift:toggle() end),
+    awful.key({ modkey, "Control" }, "c", function() lain.widgets.contrib.countdown:set_countdown(mypromptbox) end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() mypromptbox[mouse.screen]:run() end),

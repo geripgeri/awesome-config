@@ -238,7 +238,7 @@ countdown = lain.widgets.contrib.countdown({
                 widget:set_text(" Time is up")
             else
                 countdown_icon:set_image(countdown_up)
-                widget:set_markup(markup(waring," Time is up"))
+                widget:set_markup(markup(waring, " Time is up"))
             end
         else
             widget:set_text("")
@@ -248,20 +248,18 @@ countdown = lain.widgets.contrib.countdown({
 })
 
 -- Redshift widget
-local rs_on =  beautiful.widget_rs_on
+local rs_on = beautiful.widget_rs_on
 local rs_off = beautiful.widget_rs_off
 
 myredshift = wibox.widget.imagebox(rs_on)
-lain.widgets.contrib.redshift:attach(
-    myredshift,
-    function ()
+lain.widgets.contrib.redshift:attach(myredshift,
+    function()
         if lain.widgets.contrib.redshift:is_active() then
             myredshift:set_image(rs_on)
         else
             myredshift:set_image(rs_off)
         end
-    end
-)
+    end)
 
 -- MPD
 mpdicon = wibox.widget.imagebox(beautiful.widget_music)
@@ -517,11 +515,11 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey }, "Right", function() lain.util.tag_view_nonempty(1) end),
 
     -- Dynamic tagging
-    awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag(mypromptbox) end), -- add new tag
-    awful.key({ modkey, "Shift" }, "r", function () lain.util.rename_tag(mypromptbox) end), -- rename tag
-    awful.key({ modkey, "Shift" }, "Right", function () lain.util.move_tag(1) end),   -- move to next tag
-    awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end), -- move to previous tag
-    awful.key({ modkey, "Shift" }, "d", function () lain.util.remove_tag() end), -- delete tag
+    awful.key({ modkey, "Shift" }, "n", function() lain.util.add_tag(mypromptbox) end), -- add new tag
+    awful.key({ modkey, "Shift" }, "r", function() lain.util.rename_tag(mypromptbox) end), -- rename tag
+    awful.key({ modkey, "Shift" }, "Right", function() lain.util.move_tag(1) end), -- move to next tag
+    awful.key({ modkey, "Shift" }, "Left", function() lain.util.move_tag(-1) end), -- move to previous tag
+    awful.key({ modkey, "Shift" }, "d", function() lain.util.remove_tag() end), -- delete tag
 
     -- Default client focus
     awful.key({ altkey }, "k",
@@ -685,11 +683,11 @@ globalkeys = awful.util.table.join(-- Controling Awesome
         end),
 
     -- Brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("light -A 10") end),
-    awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("light -U 10") end),
+    awful.key({}, "XF86MonBrightnessUp", function() awful.util.spawn("light -A 10") end),
+    awful.key({}, "XF86MonBrightnessDown", function() awful.util.spawn("light -U 10") end),
 
-    awful.key({ modkey , altkey }, "Up", function () awful.util.spawn("light -A 10") end),
-    awful.key({ modkey, altkey }, "Down", function () awful.util.spawn("light -U 10") end),
+    awful.key({ modkey, altkey }, "Up", function() awful.util.spawn("light -A 10") end),
+    awful.key({ modkey, altkey }, "Down", function() awful.util.spawn("light -U 10") end),
 
     -- Copy to clipboard
     awful.key({ modkey }, "c", function() os.execute("xsel -p -o | xsel -i -b") end),
@@ -956,17 +954,17 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function()
     local layout = awful.layout.getname(awful.layout.get(s))
 
     if #clients > 0 then -- Fine grained borders and floaters control
-    for _, c in pairs(clients) do -- Floaters always have borders
-    if awful.client.floating.get(c) or layout == "floating" then
-        c.border_width = beautiful.border_width
+        for _, c in pairs(clients) do -- Floaters always have borders
+            if awful.client.floating.get(c) or layout == "floating" then
+                c.border_width = beautiful.border_width
 
-        -- No borders with only one visible client
-    elseif #clients == 1 or layout == "max" then
-        c.border_width = 0
-    else
-        c.border_width = beautiful.border_width
-    end
-    end
+                -- No borders with only one visible client
+            elseif #clients == 1 or layout == "max" then
+                c.border_width = 0
+            else
+                c.border_width = beautiful.border_width
+            end
+        end
     end
 end)
 end

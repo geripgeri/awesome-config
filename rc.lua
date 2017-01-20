@@ -155,13 +155,6 @@ end
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- {{{ Menu
-mymainmenu = awful.menu.new({
-    items = require("menugen").build_menu(),
-    theme = { height = 16, width = 130 }
-})
--- }}}
-
 -- {{{ Wibox
 markup = lain.util.markup
 separators = lain.util.separators
@@ -422,10 +415,10 @@ end),
         if client.focus then client.focus:raise() end
     end))
 
-for s = 1, screen.count() do
+awful.screen.connect_for_each_screen(function(s)
 
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt()
+    s.mypromptbox = awful.widget.prompt()
 
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -448,7 +441,7 @@ for s = 1, screen.count() do
     left_layout:add(mylayoutbox[s])
     left_layout:add(spr)
     left_layout:add(mytaglist[s])
-    left_layout:add(mypromptbox[s])
+    left_layout:add(s.mypromptbox)
     left_layout:add(spr)
 
     -- Widgets that are aligned to the upper right
@@ -491,12 +484,11 @@ for s = 1, screen.count() do
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
     mywibox[s]:set_widget(layout)
-end
+end)
 -- }}}
 
 -- {{{ Mouse Bindings
-root.buttons(awful.util.table.join(awful.button({}, 3, function() mymainmenu:toggle() end),
-    awful.button({}, 4, awful.tag.viewnext),
+root.buttons(awful.util.table.join(awful.button({}, 4, awful.tag.viewnext),
     awful.button({}, 5, awful.tag.viewprev)))
 -- }}}
 
@@ -558,12 +550,6 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey }, "a",
         function()
             awful.tag.viewonly(awful.tag.gettags(1)[2])
-        end),
-
-    -- Show Menu
-    awful.key({ modkey }, "a",
-        function()
-            mymainmenu:show({ keygrabber = true })
         end),
 
     -- Show/Hide Wibox
@@ -708,16 +694,19 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Control" }, "c", function() lain.widgets.contrib.countdown:set_countdown(mypromptbox) end),
 
     -- Prompt
-    awful.key({ modkey }, "r", function() mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),
     awful.key({ modkey }, "x",
-        function()
-            awful.prompt.run({ prompt = "Run Lua code: " },
-                mypromptbox[mouse.screen].widget,
-                awful.util.eval, nil,
-                awful.util.getdir("cache") .. "/history_eval")
-        end))
+        function ()
+            awful.prompt.run {
+                prompt       = "Run Lua code: ",
+                textbox      = awful.screen.focused().mypromptbox.widget,
+                exe_callback = awful.util.eval,
+                history_path = awful.util.get_cache_dir() .. "/history_eval"
+            }
+        end,
+        {description = "lua execute prompt", group = "awesome"}))
 
-clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
+    clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
     awful.key({ modkey, }, "q", function(c) c:kill() end),
     awful.key({ modkey, "Control" }, "space", awful.client.floating.toggle),
     awful.key({ modkey, "Control" }, "Return", function(c) c:swap(awful.client.getmaster()) end),
@@ -954,17 +943,17 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function()
     local layout = awful.layout.getname(awful.layout.get(s))
 
     if #clients > 0 then -- Fine grained borders and floaters control
-        for _, c in pairs(clients) do -- Floaters always have borders
-            if awful.client.floating.get(c) or layout == "floating" then
-                c.border_width = beautiful.border_width
+    for _, c in pairs(clients) do -- Floaters always have borders
+    if awful.client.floating.get(c) or layout == "floating" then
+        c.border_width = beautiful.border_width
 
-                -- No borders with only one visible client
-            elseif #clients == 1 or layout == "max" then
-                c.border_width = 0
-            else
-                c.border_width = beautiful.border_width
-            end
-        end
+        -- No borders with only one visible client
+    elseif #clients == 1 or layout == "max" then
+        c.border_width = 0
+    else
+        c.border_width = beautiful.border_width
+    end
+    end
     end
 end)
 end

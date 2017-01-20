@@ -155,13 +155,6 @@ end
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- {{{ Menu
-mymainmenu = awful.menu.new({
-    items = require("menugen").build_menu(),
-    theme = { height = 16, width = 130 }
-})
--- }}}
-
 -- {{{ Wibox
 markup = lain.util.markup
 separators = lain.util.separators
@@ -495,8 +488,7 @@ end
 -- }}}
 
 -- {{{ Mouse Bindings
-root.buttons(awful.util.table.join(awful.button({}, 3, function() mymainmenu:toggle() end),
-    awful.button({}, 4, awful.tag.viewnext),
+root.buttons(awful.util.table.join(awful.button({}, 4, awful.tag.viewnext),
     awful.button({}, 5, awful.tag.viewprev)))
 -- }}}
 
@@ -558,12 +550,6 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey }, "a",
         function()
             awful.tag.viewonly(awful.tag.gettags(1)[2])
-        end),
-
-    -- Show Menu
-    awful.key({ modkey }, "a",
-        function()
-            mymainmenu:show({ keygrabber = true })
         end),
 
     -- Show/Hide Wibox
@@ -954,17 +940,17 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function()
     local layout = awful.layout.getname(awful.layout.get(s))
 
     if #clients > 0 then -- Fine grained borders and floaters control
-        for _, c in pairs(clients) do -- Floaters always have borders
-            if awful.client.floating.get(c) or layout == "floating" then
-                c.border_width = beautiful.border_width
+    for _, c in pairs(clients) do -- Floaters always have borders
+    if awful.client.floating.get(c) or layout == "floating" then
+        c.border_width = beautiful.border_width
 
-                -- No borders with only one visible client
-            elseif #clients == 1 or layout == "max" then
-                c.border_width = 0
-            else
-                c.border_width = beautiful.border_width
-            end
-        end
+        -- No borders with only one visible client
+    elseif #clients == 1 or layout == "max" then
+        c.border_width = 0
+    else
+        c.border_width = beautiful.border_width
+    end
+    end
     end
 end)
 end

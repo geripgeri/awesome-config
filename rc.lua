@@ -415,10 +415,10 @@ end),
         if client.focus then client.focus:raise() end
     end))
 
-for s = 1, screen.count() do
+awful.screen.connect_for_each_screen(function(s)
 
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt()
+    s.mypromptbox = awful.widget.prompt()
 
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -441,7 +441,7 @@ for s = 1, screen.count() do
     left_layout:add(mylayoutbox[s])
     left_layout:add(spr)
     left_layout:add(mytaglist[s])
-    left_layout:add(mypromptbox[s])
+    left_layout:add(s.mypromptbox)
     left_layout:add(spr)
 
     -- Widgets that are aligned to the upper right
@@ -484,7 +484,7 @@ for s = 1, screen.count() do
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
     mywibox[s]:set_widget(layout)
-end
+end)
 -- }}}
 
 -- {{{ Mouse Bindings
@@ -694,16 +694,19 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Control" }, "c", function() lain.widgets.contrib.countdown:set_countdown(mypromptbox) end),
 
     -- Prompt
-    awful.key({ modkey }, "r", function() mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),
     awful.key({ modkey }, "x",
-        function()
-            awful.prompt.run({ prompt = "Run Lua code: " },
-                mypromptbox[mouse.screen].widget,
-                awful.util.eval, nil,
-                awful.util.getdir("cache") .. "/history_eval")
-        end))
+        function ()
+            awful.prompt.run {
+                prompt       = "Run Lua code: ",
+                textbox      = awful.screen.focused().mypromptbox.widget,
+                exe_callback = awful.util.eval,
+                history_path = awful.util.get_cache_dir() .. "/history_eval"
+            }
+        end,
+        {description = "lua execute prompt", group = "awesome"}))
 
-clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
+    clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
     awful.key({ modkey, }, "q", function(c) c:kill() end),
     awful.key({ modkey, "Control" }, "space", awful.client.floating.toggle),
     awful.key({ modkey, "Control" }, "Return", function(c) c:swap(awful.client.getmaster()) end),

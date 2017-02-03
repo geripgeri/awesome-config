@@ -667,17 +667,17 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),
     awful.key({ modkey }, "x",
-        function ()
+        function()
             awful.prompt.run {
-                prompt       = "Run Lua code: ",
-                textbox      = awful.screen.focused().mypromptbox.widget,
+                prompt = "Run Lua code: ",
+                textbox = awful.screen.focused().mypromptbox.widget,
                 exe_callback = awful.util.eval,
                 history_path = awful.util.get_cache_dir() .. "/history_eval"
             }
         end,
-        {description = "lua execute prompt", group = "awesome"}))
+        { description = "lua execute prompt", group = "awesome" }))
 
-    clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
+clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.fullscreen = not c.fullscreen end),
     awful.key({ modkey, }, "q", function(c) c:kill() end),
     awful.key({ modkey, "Control" }, "space", awful.client.floating.toggle),
     awful.key({ modkey, "Control" }, "Return", function(c) c:swap(awful.client.getmaster()) end),

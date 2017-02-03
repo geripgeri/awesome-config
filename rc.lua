@@ -216,10 +216,10 @@ kbdlayout = lain.widgets.contrib.kbdlayout({
 local rs_on = beautiful.widget_rs_on
 local rs_off = beautiful.widget_rs_off
 
-myredshift = wibox.widget.imagebox(rs_on)
+myredshift = wibox.widget.imagebox()
 lain.widgets.contrib.redshift:attach(myredshift,
-    function()
-        if lain.widgets.contrib.redshift:is_active() then
+    function(active)
+        if active then
             myredshift:set_image(rs_on)
         else
             myredshift:set_image(rs_off)
@@ -442,7 +442,7 @@ awful.screen.connect_for_each_screen(function(s)
     right_layout_add(cpuicon, cpuwidget)
     right_layout_add(tempicon, tempwidget)
     right_layout_add(baticon, batwidget)
-    right_layout_add(myredshift)
+    right_layout_add(myredshift.widget)
     right_layout_add(taskicon, taskwidget, spr)
     right_layout_add(date, spr)
     right_layout_add(clockTZ1)

@@ -435,7 +435,7 @@ awful.screen.connect_for_each_screen(function(s)
     end
 
     right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(wibox.widget.systray())
     right_layout_add(mpdicon, mpdwidget)
     right_layout_add(volicon, volumewidget)
     right_layout_add(memicon, memwidget)

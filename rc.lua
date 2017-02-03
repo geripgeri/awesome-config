@@ -56,12 +56,6 @@ end
 run_once("urxvtd")
 run_once("unclutter -root")
 --- run_once("xcompmgr -c")
-run_once("skype")
-run_once("mopidy")
-run_once("numlockx on")
-run_once("nm-applet")
-run_once("dropbox")
-run_once("thunderbird")
 
 -- }}}
 

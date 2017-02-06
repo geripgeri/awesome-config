@@ -226,17 +226,17 @@ local date = lain.widgets.abase({
 
 local clockTZ1 = lain.widgets.abase({
     timeout = 10,
-    cmd = "TZ=Europe/London date +'%R'",
+    cmd = {"bash", "-c", "TZ=Europe/London date +'%R'"},
     settings = function()
-        widget:set_markup(" " .. markup(theme.theme.waring, output))
+        widget:set_markup(" " .. markup(theme.waring, output))
     end
 })
 
 clockTZ2 = lain.widgets.abase({
-    timeout = 60,
+    timeout = 10,
     cmd = "date +'%R'",
     settings = function()
-        widget:set_markup(" " .. markup("#55FF00", output))
+        widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end
 })
 
@@ -244,9 +244,9 @@ taskicon = wibox.widget.imagebox(beautiful.widget_task)
 
 taskwidget = lain.widgets.abase({
     timeout = 60,
-    cmd = wunderline_task_count_cmd,
+    cmd = {"bash", "-c", wunderline_task_count_cmd},
     settings = function()
-        widget:set_markup(markup("#55FF00", output))
+        widget:set_markup(markup(theme.taglist_fg_focus, output))
     end
 })
 
@@ -516,7 +516,7 @@ awful.screen.connect_for_each_screen(function(s)
             clockTZ1, arrl_ld,
             wibox.container.background(clockTZ2, theme.bg_focus), arrl_dl,
             kbdlayout, arrl_ld,
-            wibox.container.background(s.mylayoutbox,theme.bg_focus)
+            wibox.container.background(s.mylayoutbox, theme.bg_focus)
         },
     }
 end)

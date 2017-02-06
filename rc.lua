@@ -114,7 +114,7 @@ tags = {
         },
         {
             names = { "www", "editor", "mail" },
-            layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
+            layout = { layouts[3], layouts[3], layouts[3], layouts[3] }
         }
     }
 }
@@ -832,7 +832,7 @@ if screen.count() == 3 then
             properties = { tag = screen[2].tags[1] }
         },
         {
-            rule = { class = "telegram-desktop" },
+            rule = { class = "Telegram" },
             properties = { tag = screen[2].tags[1] }
         },
         {
@@ -842,6 +842,10 @@ if screen.count() == 3 then
         {
             rule = { class = "sublime_text" },
             properties = { tag = screen[3].tags[2] }
+        },
+        {
+            rule = { class = "Firefox" },
+            properties = { tag = screen[1].tags[1] }
         }
     }
 elseif screen.count == 2 then
@@ -862,7 +866,7 @@ elseif screen.count == 2 then
             properties = { tag = screen[2].tags[1] }
         },
         {
-            rule = { class = "telegram-desktop" },
+            rule = { class = "Telegram" },
             properties = { tag = screen[2].tags[1] }
         },
         {
@@ -872,6 +876,10 @@ elseif screen.count == 2 then
         {
             rule = { class = "sublime_text" },
             properties = { tag = screen[1].tags[3] }
+        },
+        {
+            rule = { class = "Firefox" },
+            properties = { tag = screen[1].tags[1] }
         }
     }
 else
@@ -892,7 +900,7 @@ else
             properties = { tag = screen[1].tags[4] }
         },
         {
-            rule = { class = "telegram-desktop" },
+            rule = { class = "Telegram" },
             properties = { tag = screen[1].tags[4] }
         },
         {
@@ -902,6 +910,10 @@ else
         {
             rule = { class = "sublime_text" },
             properties = { tag = screen[1].tags[3] }
+        },
+        {
+            rule = { class = "Firefox" },
+            properties = { tag = screen[1].tags[1] }
         }
     }
 end

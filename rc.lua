@@ -1,11 +1,14 @@
 --[[
 
-     Powerarrow Darker Awesome WM config 2.0
-     github.com/copycat-killer
+     Awesome Configuration
+     http://github.com/geripgeri/awesome-config
 
 --]]
 
 -- {{{ Required libraries
+local awesome, client, screen, tag = awesome, client, screen, tag
+local ipairs, string, os, table, tostring, tonumber, type = ipairs, string, os, table, tostring, tonumber, type
+
 local gears = require("gears")
 local awful = require("awful")
 awful.rules = require("awful.rules")
@@ -36,7 +39,7 @@ do
         naughty.notify({
             preset = naughty.config.presets.critical,
             title = "Oops, an error happened!",
-            text = err
+            text = tostring(err)
         })
         in_error = false
     end)
@@ -56,7 +59,6 @@ end
 run_once("urxvtd")
 run_once("unclutter -root")
 --- run_once("xcompmgr -c")
-
 -- }}}
 
 -- {{{ Variable definitions
@@ -88,19 +90,18 @@ openwunderlist = "wunderline open"
 
 screenshot = "spectacle -g"
 
--- Waring color
-waring = beautiful.waring
+-- }}}
 
-local layouts = {
+-- {{{ Tags
+layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.fair.horizontal
 }
--- }}}
+awful.layout.layouts = layouts
 
--- {{{ Tags
 tags = {
     settings = {
         {
@@ -118,25 +119,86 @@ tags = {
     }
 }
 
-for s = 1, screen.count() do
-    tags[s] = awful.tag(tags.settings[s].names, s, tags.settings[s].layout)
-end
+awful.util.taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
+    awful.button({ modkey }, 1, function(t)
+        if client.focus then
+            client.focus:move_to_tag(t)
+        end
+    end),
+    awful.button({}, 3, awful.tag.viewtoggle),
+    awful.button({ modkey }, 3, function(t)
+        if client.focus then
+            client.focus:toggle_tag(t)
+        end
+    end),
+    awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
+    awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end))
+
+awful.util.tasklist_buttons = awful.util.table.join(awful.button({}, 1, function(c)
+    if c == client.focus then
+        c.minimized = true
+    else
+        -- Without this, the following
+        -- :isvisible() makes no sense
+        c.minimized = false
+        if not c:isvisible() and c.first_tag then
+            c.first_tag:view_only()
+        end
+        -- This will also un-minimize
+        -- the client, if needed
+        client.focus = c
+        c:raise()
+    end
+end),
+
+    awful.button({}, 3, function()
+        local instance = nil
+
+        return function()
+            if instance and instance.wibox.visible then
+                instance:hide()
+                instance = nil
+            else
+                instance = awful.menu.clients({ theme = { width = 250 } })
+            end
+        end
+    end),
+    awful.button({}, 4, function()
+        awful.client.focus.byidx(1)
+    end),
+    awful.button({}, 5, function()
+        awful.client.focus.byidx(-1)
+    end))
+lain.layout.termfair.nmaster = 3
+lain.layout.termfair.ncol = 1
+lain.layout.termfair.center.nmaster = 3
+lain.layout.termfair.center.ncol = 1
+lain.layout.cascade.tile.offset_x = 2
+lain.layout.cascade.tile.offset_y = 32
+lain.layout.cascade.tile.extra_padding = 5
+lain.layout.cascade.tile.nmaster = 5
+lain.layout.cascade.tile.ncol = 2
+
 -- }}}
 
--- {{{ Wallpaper
-if beautiful.wallpaper_c then
-    if screen.count() == 3 then
+-- {{{ Screen
+-- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
+screen.connect_signal("property::geometry", function(s)
+    -- Wallpaper
+    if s.index == 3 then
         gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
         gears.wallpaper.maximized(beautiful.wallpaper_c, 2, true)
         gears.wallpaper.maximized(beautiful.wallpaper_l, 3, true)
-    elseif screen.count() == 2 then
+    elseif s.index == 2 then
         gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
         gears.wallpaper.maximized(beautiful.wallpaper_l, 2, true)
     else
         gears.wallpaper.maximized(beautiful.wallpaper_c, 1, true)
     end
-end
+end)
+
 -- }}}
+
 
 -- {{{ Fuction for open terminal and stay opens after command returns
 function open_terminal_and_hold(cmd)
@@ -150,23 +212,23 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
-markup = lain.util.markup
-separators = lain.util.separators
+local markup = lain.util.markup
+local separators = lain.util.separators
 
 -- Textclock
-date = lain.widgets.abase({
-    timeout = 10,
+local date = lain.widgets.abase({
+    timeout = 60,
     cmd = "date +'%m.%d'",
     settings = function()
-        widget:set_markup(" " .. markup("#55FF00", output))
+        widget:set_markup(" " .. markup(theme.tasklist_fg_focus, output))
     end
 })
 
-clockTZ1 = lain.widgets.abase({
+local clockTZ1 = lain.widgets.abase({
     timeout = 10,
     cmd = "TZ=Europe/London date +'%R'",
     settings = function()
-        widget:set_markup(" " .. markup(waring, output))
+        widget:set_markup(" " .. markup(theme.theme.waring, output))
     end
 })
 
@@ -221,28 +283,26 @@ lain.widgets.contrib.redshift:attach(myredshift,
     end)
 
 -- MPD
-mpdicon = wibox.widget.imagebox(beautiful.widget_music)
+local mpdicon = wibox.widget.imagebox(theme.widget_music)
 mpdicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
-mpdwidget = lain.widgets.mpd({
+theme.mpd = lain.widgets.mpd({
     settings = function()
         if mpd_now.state == "play" then
             artist = " " .. mpd_now.artist .. " "
             title = mpd_now.title .. " "
-            mpdicon:set_image(beautiful.widget_music_on)
+            mpdicon:set_image(theme.widget_music_on)
         elseif mpd_now.state == "pause" then
             artist = " mpd "
             title = "paused "
         else
             artist = ""
             title = ""
-            mpdicon:set_image(beautiful.widget_music)
+            mpdicon:set_image(theme.widget_music)
         end
 
-        widget:set_markup(markup("#EA6F81", artist) .. title)
+        widget:set_markup(markup.font(theme.font, markup("#EA6F81", artist) .. title))
     end
 })
-mpdwidget:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
-
 
 -- MEM
 memicon = wibox.widget.imagebox(beautiful.widget_mem)
@@ -251,7 +311,7 @@ memwidget = lain.widgets.mem({
         if mem_now.free >= 0.3 then
             widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
         else
-            widget:set_markup(markup(waring, string.format("%.2f", mem_now.free / 1000) .. " GB "))
+            widget:set_markup(markup(theme.waring, string.format("%.2f", mem_now.free / 1000) .. " GB "))
         end
     end
 })
@@ -263,7 +323,7 @@ cpuwidget = lain.widgets.cpu({
         if cpu_now.usage <= 80 then
             widget:set_text(" " .. cpu_now.usage .. "% ")
         else
-            widget:set_markup(markup(waring, " " .. cpu_now.usage .. "% "))
+            widget:set_markup(markup(theme.waring, " " .. cpu_now.usage .. "% "))
         end
     end
 })
@@ -281,7 +341,7 @@ tempwidget = lain.widgets.temp({
         if coretemp_now <= 80 then
             widget:set_text(" " .. coretemp_now .. " C ")
         else
-            widget:set_markup(markup(waring, " " .. coretemp_now .. " C "))
+            widget:set_markup(markup(theme.waring, " " .. coretemp_now .. " C "))
         end
     end
 })
@@ -293,7 +353,7 @@ batwidget = lain.widgets.bat({
         if tonumber(bat_now.perc) >= 15 then
             widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
         else
-            widget:set_markup(markup(waring, bat_now.perc .. "% / " .. bat_now.time))
+            widget:set_markup(markup(theme.waring, bat_now.perc .. "% / " .. bat_now.time))
         end
 
         if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
@@ -328,35 +388,38 @@ volumewidget = lain.widgets.alsa({
     end
 })
 
-
 -- Separators
-spr = wibox.widget.textbox(' ')
+local spr = wibox.widget.textbox(' ')
 arrl = wibox.widget.imagebox()
 arrl:set_image(beautiful.arrl)
 arrl_dl = separators.arrow_left(beautiful.bg_focus, "alpha")
 arrl_ld = separators.arrow_left("alpha", beautiful.bg_focus)
 
--- Create a wibox for each screen and add it
-mywibox = {}
-mypromptbox = {}
-mylayoutbox = {}
-mytaglist = {}
-mytaglist.buttons = awful.util.table.join(awful.button({}, 1, awful.tag.viewonly),
-    awful.button({ modkey }, 1, awful.client.movetotag),
+
+awful.util.taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
+    awful.button({ modkey }, 1, function(t)
+        if client.focus then
+            client.focus:move_to_tag(t)
+        end
+    end),
     awful.button({}, 3, awful.tag.viewtoggle),
-    awful.button({ modkey }, 3, awful.client.toggletag),
-    awful.button({}, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
-    awful.button({}, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end))
-mytasklist = {}
-mytasklist.buttons = awful.util.table.join(awful.button({}, 1, function(c)
+    awful.button({ modkey }, 3, function(t)
+        if client.focus then
+            client.focus:toggle_tag(t)
+        end
+    end),
+    awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
+    awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end))
+
+awful.util.tasklist_buttons = awful.util.table.join(awful.button({}, 1, function(c)
     if c == client.focus then
         c.minimized = true
     else
         -- Without this, the following
         -- :isvisible() makes no sense
         c.minimized = false
-        if not c:isvisible() then
-            awful.tag.viewonly(c:tags()[1])
+        if not c:isvisible() and c.first_tag then
+            c.first_tag:view_only()
         end
         -- This will also un-minimize
         -- the client, if needed
@@ -365,91 +428,99 @@ mytasklist.buttons = awful.util.table.join(awful.button({}, 1, function(c)
     end
 end),
     awful.button({}, 3, function()
-        if instance then
-            instance:hide()
-            instance = nil
-        else
-            instance = awful.menu.clients({ width = 250 })
+        local instance = nil
+
+        return function()
+            if instance and instance.wibox.visible then
+                instance:hide()
+                instance = nil
+            else
+                instance = awful.menu.clients({ theme = { width = 250 } })
+            end
         end
     end),
     awful.button({}, 4, function()
         awful.client.focus.byidx(1)
-        if client.focus then client.focus:raise() end
     end),
     awful.button({}, 5, function()
         awful.client.focus.byidx(-1)
-        if client.focus then client.focus:raise() end
     end))
 
+lain.layout.termfair.nmaster = 3
+lain.layout.termfair.ncol = 1
+lain.layout.termfair.center.nmaster = 3
+lain.layout.termfair.center.ncol = 1
+lain.layout.cascade.tile.offset_x = 2
+lain.layout.cascade.tile.offset_y = 32
+lain.layout.cascade.tile.extra_padding = 5
+lain.layout.cascade.tile.nmaster = 5
+lain.layout.cascade.tile.ncol = 2
+
+
+-- Separators
+local spr = wibox.widget.textbox(' ')
+local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
+local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
+
 awful.screen.connect_for_each_screen(function(s)
+
+    gears.wallpaper.maximized(theme.wallpaper, s, true)
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
 
-    -- We need one layoutbox per screen.
-    mylayoutbox[s] = awful.widget.layoutbox(s)
-    mylayoutbox[s]:buttons(awful.util.table.join(awful.button({}, 1, function() awful.layout.inc(layouts, 1) end),
-        awful.button({}, 3, function() awful.layout.inc(layouts, -1) end),
-        awful.button({}, 4, function() awful.layout.inc(layouts, 1) end),
-        awful.button({}, 5, function() awful.layout.inc(layouts, -1) end)))
+    -- Tags
+    awful.tag(tags.settings[s.index].names, s, tags.settings[s.index].layout)
 
+    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
+    -- We need one layoutbox per screen.
+    s.mylayoutbox = awful.widget.layoutbox(s)
+    s.mylayoutbox:buttons(awful.util.table.join(awful.button({}, 1, function() awful.layout.inc(1) end),
+        awful.button({}, 3, function() awful.layout.inc(-1) end),
+        awful.button({}, 4, function() awful.layout.inc(1) end),
+        awful.button({}, 5, function() awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
 
     -- Create a tasklist widget
-    mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s, height = 18 })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
 
-    -- Widgets that are aligned to the upper left
-    local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(mylayoutbox[s])
-    left_layout:add(spr)
-    left_layout:add(mytaglist[s])
-    left_layout:add(s.mypromptbox)
-    left_layout:add(spr)
-
-    -- Widgets that are aligned to the upper right
-    local right_layout_toggle = true
-    local function right_layout_add(...)
-        local arg = { ... }
-        if right_layout_toggle then
-            right_layout:add(arrl_ld)
-            for i, n in pairs(arg) do
-                right_layout:add(wibox.widget.background(n, beautiful.bg_focus))
-            end
-        else
-            right_layout:add(arrl_dl)
-            for i, n in pairs(arg) do
-                right_layout:add(n)
-            end
-        end
-        right_layout_toggle = not right_layout_toggle
-    end
-
-    right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(wibox.widget.systray())
-    right_layout_add(mpdicon, mpdwidget)
-    right_layout_add(volicon, volumewidget)
-    right_layout_add(memicon, memwidget)
-    right_layout_add(cpuicon, cpuwidget)
-    right_layout_add(tempicon, tempwidget)
-    right_layout_add(baticon, batwidget)
-    right_layout_add(myredshift.widget)
-    right_layout_add(taskicon, taskwidget, spr)
-    right_layout_add(date, spr)
-    right_layout_add(clockTZ1)
-    right_layout_add(clockTZ2, spr)
-    right_layout_add(kbdlayout)
-
-    -- Now bring it all together (with the tasklist in the middle)
-    local layout = wibox.layout.align.horizontal()
-    layout:set_left(left_layout)
-    layout:set_middle(mytasklist[s])
-    layout:set_right(right_layout)
-    mywibox[s]:set_widget(layout)
+    -- Add widgets to the wibox
+    s.mywibox:setup {
+        layout = wibox.layout.align.horizontal,
+        {
+            -- Left widgets
+            layout = wibox.layout.fixed.horizontal,
+            spr,
+            s.mytaglist,
+            s.mypromptbox,
+            spr,
+        },
+        s.mytasklist, -- Middle widget
+        {
+            -- Right widgets
+            layout = wibox.layout.fixed.horizontal,
+            wibox.widget.systray(), spr, arrl_ld,
+            wibox.container.background(mpdicon, theme.bg_focus), wibox.container.background(theme.mpd.widget, theme.bg_focus), arrl_dl,
+            volicon, volumewidget, arrl_ld,
+            wibox.container.background(memicon, theme.bg_focus), wibox.container.background(memwidget, theme.bg_focus), arrl_dl,
+            cpuicon, cpuwidget, arrl_ld,
+            wibox.container.background(tempicon, theme.bg_focus), wibox.container.background(tempwidget, theme.bg_focus), arrl_dl,
+            baticon, batwidget, arrl_ld,
+            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(taskwidget, theme.bg_focus), arrl_dl,
+            myredshift, arrl_ld,
+            wibox.container.background(date, theme.bg_focus), arrl_dl,
+            clockTZ1, arrl_ld,
+            wibox.container.background(clockTZ2, theme.bg_focus), arrl_dl,
+            kbdlayout, arrl_ld,
+            wibox.container.background(s.mylayoutbox,theme.bg_focus)
+        },
+    }
 end)
+
 -- }}}
 
 -- {{{ Mouse Bindings
@@ -754,23 +825,23 @@ if screen.count() == 3 then
         },
         {
             rule = { class = "Thunderbird" },
-            properties = { tag = tags[3][3] }
+            properties = { tag = screen[3].tags[3] }
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = tags[2][1] }
+            properties = { tag = screen[2].tags[1] }
         },
         {
             rule = { class = "telegram-desktop" },
-            properties = { tag = tags[2][1] }
+            properties = { tag = screen[2].tags[1] }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = tags[3][2] }
+            properties = { tag = screen[3].tags[2] }
         },
         {
             rule = { class = "sublime_text" },
-            properties = { tag = tags[3][2] }
+            properties = { tag = screen[3].tags[2] }
         }
     }
 elseif screen.count == 2 then
@@ -788,19 +859,19 @@ elseif screen.count == 2 then
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = tags[2][1] }
+            properties = { tag = screen[2].tags[1] }
         },
         {
             rule = { class = "telegram-desktop" },
-            properties = { tag = tags[2][1] }
+            properties = { tag = screen[2].tags[1] }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = tags[1][3] }
+            properties = { tag = screen[1].tags[3] }
         },
         {
             rule = { class = "sublime_text" },
-            properties = { tag = tags[1][3] }
+            properties = { tag = screen[1].tags[3] }
         }
     }
 else
@@ -818,19 +889,19 @@ else
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = tags[1][4] }
+            properties = { tag = screen[1].tags[4] }
         },
         {
             rule = { class = "telegram-desktop" },
-            properties = { tag = tags[1][4] }
+            properties = { tag = screen[1].tags[4] }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = tags[1][3] }
+            properties = { tag = screen[1].tags[3] }
         },
         {
             rule = { class = "sublime_text" },
-            properties = { tag = tags[1][3] }
+            properties = { tag = screen[1].tags[3] }
         }
     }
 end

@@ -216,7 +216,7 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 -- Textclock
-local date = lain.widgets.abase({
+local date = lain.widget.watch({
     timeout = 60,
     cmd = "date +'%m.%d'",
     settings = function()
@@ -224,15 +224,15 @@ local date = lain.widgets.abase({
     end
 })
 
-local clockTZ1 = lain.widgets.abase({
+local clockTZ1 = lain.widget.watch({
     timeout = 10,
-    cmd = {"bash", "-c", "TZ=Europe/London date +'%R'"},
+    cmd = { "bash", "-c", "TZ=Europe/London date +'%R'" },
     settings = function()
         widget:set_markup(" " .. markup(theme.waring, output))
     end
 })
 
-clockTZ2 = lain.widgets.abase({
+local clockTZ2 = lain.widget.watch({
     timeout = 10,
     cmd = "date +'%R'",
     settings = function()
@@ -240,20 +240,20 @@ clockTZ2 = lain.widgets.abase({
     end
 })
 
-taskicon = wibox.widget.imagebox(beautiful.widget_task)
+local taskicon = wibox.widget.imagebox(theme.widget_task)
 
-taskwidget = lain.widgets.abase({
+local task = lain.widget.watch({
     timeout = 60,
-    cmd = {"bash", "-c", wunderline_task_count_cmd},
+    cmd = { "bash", "-c", wunderline_task_count_cmd },
     settings = function()
         widget:set_markup(markup(theme.taglist_fg_focus, output))
     end
 })
 
-taskwidget:buttons(awful.util.table.join(awful.button({}, 1, function() open_terminal_and_hold(tasks_for_today) end),
+taskicon:buttons(awful.util.table.join(awful.button({}, 1, function() open_terminal_and_hold(tasks_for_today) end),
     awful.util.table.join(awful.button({}, 3, function() awful.util.spawn(openwunderlist) end))))
 
-kbdlayout = lain.widgets.contrib.kbdlayout({
+local kbdlayout = lain.widget.contrib.kbdlayout({
     layouts = {
         { layout = "us" },
         { layout = "hu" }
@@ -269,11 +269,11 @@ kbdlayout = lain.widgets.contrib.kbdlayout({
 })
 
 -- Redshift widget
-local rs_on = beautiful.widget_rs_on
-local rs_off = beautiful.widget_rs_off
+local rs_on = theme.widget_rs_on
+local rs_off = theme.widget_rs_off
 
-myredshift = wibox.widget.imagebox()
-lain.widgets.contrib.redshift:attach(myredshift,
+local myredshift = wibox.widget.imagebox()
+lain.widget.contrib.redshift:attach(myredshift,
     function(active)
         if active then
             myredshift:set_image(rs_on)
@@ -285,7 +285,7 @@ lain.widgets.contrib.redshift:attach(myredshift,
 -- MPD
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 mpdicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
-theme.mpd = lain.widgets.mpd({
+theme.mpd = lain.widget.mpd({
     settings = function()
         if mpd_now.state == "play" then
             artist = " " .. mpd_now.artist .. " "
@@ -305,8 +305,8 @@ theme.mpd = lain.widgets.mpd({
 })
 
 -- MEM
-memicon = wibox.widget.imagebox(beautiful.widget_mem)
-memwidget = lain.widgets.mem({
+local memicon = wibox.widget.imagebox(theme.widget_mem)
+local mem = lain.widget.mem({
     settings = function()
         if mem_now.free >= 0.3 then
             widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
@@ -317,8 +317,8 @@ memwidget = lain.widgets.mem({
 })
 
 -- CPU
-cpuicon = wibox.widget.imagebox(beautiful.widget_cpu)
-cpuwidget = lain.widgets.cpu({
+local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
+local cpu = lain.widget.cpu({
     settings = function()
         if cpu_now.usage <= 80 then
             widget:set_text(" " .. cpu_now.usage .. "% ")
@@ -329,12 +329,12 @@ cpuwidget = lain.widgets.cpu({
 })
 
 cpuicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
-cpuwidget:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
+--cpu:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
 
 
 -- Coretemp
-tempicon = wibox.widget.imagebox(beautiful.widget_temp)
-tempwidget = lain.widgets.temp({
+local tempicon = wibox.widget.imagebox(theme.widget_temp)
+local temp = lain.widget.temp({
     tempfile = "/sys/class/thermal/thermal_zone1/temp",
     timeout = 10,
     settings = function()
@@ -347,8 +347,8 @@ tempwidget = lain.widgets.temp({
 })
 
 -- Battery
-baticon = wibox.widget.imagebox(beautiful.widget_battery)
-batwidget = lain.widgets.bat({
+local baticon = wibox.widget.imagebox(theme.widget_battery)
+local bat = lain.widget.bat({
     settings = function()
         if tonumber(bat_now.perc) >= 15 then
             widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
@@ -358,30 +358,30 @@ batwidget = lain.widgets.bat({
 
         if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
             widget:set_markup(" AC ")
-            baticon:set_image(beautiful.widget_ac)
+            baticon:set_image(theme.widget_ac)
             return
         elseif tonumber(bat_now.perc) <= 5 then
-            baticon:set_image(beautiful.widget_battery_empty)
+            baticon:set_image(theme.widget_battery_empty)
         elseif tonumber(bat_now.perc) <= 15 then
-            baticon:set_image(beautiful.widget_battery_low)
+            baticon:set_image(theme.widget_battery_low)
         else
-            baticon:set_image(beautiful.widget_battery)
+            baticon:set_image(theme.widget_battery)
         end
     end
 })
 
 -- ALSA volume
-volicon = wibox.widget.imagebox(beautiful.widget_vol)
-volumewidget = lain.widgets.alsa({
+local volicon = wibox.widget.imagebox(theme.widget_vol)
+local volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
-            volicon:set_image(beautiful.widget_vol_mute)
+            volicon:set_image(theme.widget_vol_mute)
         elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(beautiful.widget_vol_no)
+            volicon:set_image(theme.widget_vol_no)
         elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(beautiful.widget_vol_low)
+            volicon:set_image(theme.widget_vol_low)
         else
-            volicon:set_image(beautiful.widget_vol)
+            volicon:set_image(theme.widget_vol)
         end
 
         widget:set_text(volume_now.level .. "% ")
@@ -505,17 +505,17 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(), spr, arrl_ld,
             wibox.container.background(mpdicon, theme.bg_focus), wibox.container.background(theme.mpd.widget, theme.bg_focus), arrl_dl,
-            volicon, volumewidget, arrl_ld,
-            wibox.container.background(memicon, theme.bg_focus), wibox.container.background(memwidget, theme.bg_focus), arrl_dl,
-            cpuicon, cpuwidget, arrl_ld,
-            wibox.container.background(tempicon, theme.bg_focus), wibox.container.background(tempwidget, theme.bg_focus), arrl_dl,
-            baticon, batwidget, arrl_ld,
-            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(taskwidget, theme.bg_focus), arrl_dl,
+            volicon, volume.widget, arrl_ld,
+            wibox.container.background(memicon, theme.bg_focus), wibox.container.background(mem.widget, theme.bg_focus), arrl_dl,
+            cpuicon, cpu.widget, arrl_ld,
+            wibox.container.background(tempicon, theme.bg_focus), wibox.container.background(temp.widget, theme.bg_focus), arrl_dl,
+            baticon, bat.widget, arrl_ld,
+            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(task.widget, theme.bg_focus), arrl_dl,
             myredshift, arrl_ld,
-            wibox.container.background(date, theme.bg_focus), arrl_dl,
-            clockTZ1, arrl_ld,
-            wibox.container.background(clockTZ2, theme.bg_focus), arrl_dl,
-            kbdlayout, arrl_ld,
+            wibox.container.background(date.widget, theme.bg_focus), arrl_dl,
+            clockTZ1.widget, arrl_ld,
+            wibox.container.background(clockTZ2.widget, theme.bg_focus), arrl_dl,
+            kbdlayout.widget, arrl_ld,
             wibox.container.background(s.mylayoutbox, theme.bg_focus)
         },
     }
@@ -623,7 +623,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, }, "z", function() drop(terminal) end),
 
     -- Widgets popups
-    awful.key({ altkey, }, "c", function() lain.widgets.calendar:show(7) end),
+    awful.key({ altkey, }, "c", function() lain.widget.calendar:show(7) end),
 
     --awful.key({ altkey,           }, "x",      function () awful.util.spawn_with_shell(musicplr) end),
 
@@ -633,38 +633,38 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- ALSA volume control
     awful.key({ modkey }, "Up",
         function()
-            os.execute(string.format("%s set %s 1%%+", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1%%+", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({}, "XF86AudioRaiseVolume",
         function()
-            os.execute(string.format("%s set %s 1%%+", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1%%+", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({ modkey }, "Down",
         function()
-            os.execute(string.format("%s set %s 1%%-", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1%%-", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({}, "XF86AudioLowerVolume",
         function()
-            os.execute(string.format("%s set %s 1%%-", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1%%-", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({ modkey }, "m",
         function()
-            os.execute(string.format("%s set %s 1+ toggle", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1+ toggle", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({}, "XF86AudioMute",
         function()
-            os.execute(string.format("%s set %s 1+ toggle", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 1+ toggle", volume.cmd, volume.channel))
+            volume.update()
         end),
     awful.key({ modkey }, "XF86AudioRaiseVolume",
         function()
-            os.execute(string.format("%s set %s 100%%", volumewidget.cmd, volumewidget.channel))
-            volumewidget.update()
+            os.execute(string.format("%s set %s 100%%", volume.cmd, volume.channel))
+            volume.update()
         end),
 
     -- MPD control
@@ -726,8 +726,8 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
     awful.key({ altkey }, "Shift_L", function() kbdlayout.next() end),
-    awful.key({ modkey, "Shift" }, "t", function() lain.widgets.contrib.redshift:toggle() end),
-    awful.key({ modkey, "Control" }, "c", function() lain.widgets.contrib.countdown:set_countdown(mypromptbox) end),
+    awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
+    awful.key({ modkey, "Control" }, "c", function() lain.widget.contrib.countdown:set_countdown(mypromptbox) end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),

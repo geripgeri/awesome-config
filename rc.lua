@@ -836,6 +836,10 @@ if screen.count() == 3 then
             properties = { tag = screen[2].tags[1] }
         },
         {
+            rule = { class = "Slack" },
+            properties = { tag = screen[2].tags[1] }
+        },
+        {
             rule = { class = "Emacs" },
             properties = { tag = screen[3].tags[2] }
         },
@@ -870,6 +874,10 @@ elseif screen.count == 2 then
             properties = { tag = screen[2].tags[1] }
         },
         {
+            rule = { class = "Slack" },
+            properties = { tag = screen[2].tags[1] }
+        },
+        {
             rule = { class = "Emacs" },
             properties = { tag = screen[1].tags[3] }
         },
@@ -901,6 +909,10 @@ else
         },
         {
             rule = { class = "Telegram" },
+            properties = { tag = screen[1].tags[4] }
+        },
+        {
+            rule = { class = "Slack" },
             properties = { tag = screen[1].tags[4] }
         },
         {

@@ -48,8 +48,8 @@ end
 
 -- {{{ Autostart windowless processes
 local function run_once(cmd)
-    findme = cmd
-    firstspace = cmd:find(" ")
+    local findme = cmd
+    local firstspace = cmd:find(" ")
     if firstspace then
         findme = cmd:sub(0, firstspace - 1)
     end
@@ -152,7 +152,7 @@ awful.util.tasklist_buttons = awful.util.table.join(awful.button({}, 1, function
 end),
 
     awful.button({}, 3, function()
-        local instance = nil
+        local instance
 
         return function()
             if instance and instance.wibox.visible then
@@ -426,7 +426,7 @@ awful.util.tasklist_buttons = awful.util.table.join(awful.button({}, 1, function
     end
 end),
     awful.button({}, 3, function()
-        local instance = nil
+        local instance
 
         return function()
             if instance and instance.wibox.visible then

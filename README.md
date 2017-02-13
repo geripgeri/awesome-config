@@ -1,5 +1,5 @@
-Theme for [Awesome](http://awesome.naquadah.org/) WM 3.5+
-===================
+Theme for [Awesome](http://awesome.naquadah.org/) WM 4.0+
+=========================================================
 | | |
  ------- | ------------- 
 |Author | Gergely Peidl < awesome [at] peidl [dot] net > |

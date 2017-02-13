@@ -182,19 +182,17 @@ lain.layout.cascade.tile.ncol = 2
 -- }}}
 
 -- {{{ Screen
+
+
+local function set_wallpaper(screen)
+    local wallpappers = { theme.wallpaper_r, theme.wallpaper_c, theme.wallpaper_l }
+    gears.wallpaper.maximized(wallpappers[screen], screen, true)
+end
+
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)
     -- Wallpaper
-    if s.index == 3 then
-        gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
-        gears.wallpaper.maximized(beautiful.wallpaper_c, 2, true)
-        gears.wallpaper.maximized(beautiful.wallpaper_l, 3, true)
-    elseif s.index == 2 then
-        gears.wallpaper.maximized(beautiful.wallpaper_r, 1, true)
-        gears.wallpaper.maximized(beautiful.wallpaper_l, 2, true)
-    else
-        gears.wallpaper.maximized(beautiful.wallpaper_c, 1, true)
-    end
+    set_wallpaper(s.index)
 end)
 
 -- }}}
@@ -463,8 +461,7 @@ local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
 local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
 
 awful.screen.connect_for_each_screen(function(s)
-
-    gears.wallpaper.maximized(theme.wallpaper, s, true)
+    set_wallpaper(s.index)
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()

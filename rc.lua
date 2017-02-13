@@ -743,7 +743,7 @@ clientkeys = awful.util.table.join(awful.key({ modkey, }, "f", function(c) c.ful
     awful.key({ modkey, }, "q", function(c) c:kill() end),
     awful.key({ modkey, "Control" }, "space", awful.client.floating.toggle),
     awful.key({ modkey, "Control" }, "Return", function(c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey, }, "o", awful.client.movetoscreen),
+    awful.key({ modkey, }, "o", function(c) c:move_to_screen() end),
     awful.key({ modkey, }, "t", function(c) c.ontop = not c.ontop end),
     awful.key({ modkey, }, "n",
         function(c)
@@ -817,7 +817,10 @@ if screen.count() == 3 then
                 focus = awful.client.focus.filter,
                 keys = clientkeys,
                 buttons = clientbuttons,
-                size_hints_honor = false
+                size_hints_honor = false,
+                buttons = clientbuttons,
+                screen = awful.screen.preferred,
+                placement = awful.placement.no_overlap + awful.placement.no_offscreen
             }
         },
         {

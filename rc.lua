@@ -727,7 +727,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
     awful.key({ altkey }, "Shift_L", function() kbdlayout.next() end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
-    awful.key({ modkey, "Control" }, "c", function() lain.widget.contrib.countdown:set_countdown(mypromptbox) end),
+    --awful.key({ modkey, "Control" }, "c", function() countdown.set() end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),

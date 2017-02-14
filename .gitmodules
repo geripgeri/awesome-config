@@ -6,3 +6,8 @@
  	path = lain
 	url = git://github.com/copycat-killer/lain.git
 	branch = master
+
+[submodule "icons"]
+	path = theme/vertex-icons
+	url = https://github.com/horst3180/Vertex-Icons
+	branch = master

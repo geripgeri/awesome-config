@@ -39,7 +39,8 @@ do
         naughty.notify({
             preset = naughty.config.presets.critical,
             title = "Oops, an error happened!",
-            text = tostring(err)
+            text = tostring(err),
+            icon = theme.error_icon
         })
         in_error = false
     end)
@@ -102,20 +103,22 @@ layouts = {
 }
 awful.layout.layouts = layouts
 
-tags = {
-    settings = {
-        {
-            names = { "www", "IDE", "editor", "im" },
-            layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
-        },
-        {
-            names = { "im", "files" },
-            layout = { layouts[2], layouts[2], layouts[2], layouts[2] }
-        },
-        {
-            names = { "www", "editor", "mail" },
-            layout = { layouts[3], layouts[3], layouts[3], layouts[3] }
-        }
+
+local tags = {
+    {
+        names = { "www", "IDE", "editor", "im" },
+        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] },
+        icons = { theme.tag_icon_browser, theme.tag_icon_ide, theme.tag_icon_editor, theme.tag_icon_im }
+    },
+    {
+        names = { "im", "files" },
+        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] },
+        icons = { theme.tag_icon_im, theme.tag_icon_file_manager }
+    },
+    {
+        names = { "www", "editor", "mail" },
+        layouts = { layouts[3], layouts[3], layouts[3], layouts[3] },
+        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail }
     }
 }
 
@@ -467,7 +470,13 @@ awful.screen.connect_for_each_screen(function(s)
     s.mypromptbox = awful.widget.prompt()
 
     -- Tags
-    awful.tag(tags.settings[s.index].names, s, tags.settings[s.index].layout)
+    current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
+
+    for i, t in ipairs(current_tags) do
+        awful.tag.seticon(tags[s.index].icons[i], t)
+        awful.tag.setproperty(t, "icon_only", 1)
+    end
+
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.

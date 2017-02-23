@@ -669,37 +669,37 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey, "Control" }, "Up",
         function()
             awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({}, "XF86AudioPlay",
         function()
             awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({ altkey, "Control" }, "Down",
         function()
             awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({ altkey, "Control" }, "Left",
         function()
             awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({}, "XF86AudioPrev",
         function()
             awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({ altkey, "Control" }, "Right",
         function()
             awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
     awful.key({}, "XF86AudioNext",
         function()
             awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-            mpdwidget.update()
+            theme.mpd.update()
         end),
 
     -- Brightness

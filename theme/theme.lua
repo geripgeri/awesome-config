@@ -88,8 +88,9 @@ theme.tag_icon_browser = vertex_icons_dir .. "mimetypes/symbolic/text-html-symbo
 theme.tag_icon_im = vertex_icons_dir .. "apps/symbolic/system-users-symbolic.svg"
 theme.tag_icon_ide = vertex_icons_dir .. "categories/symbolic/preferences-system-symbolic.svg"
 theme.tag_icon_editor = vertex_icons_dir .. "apps/symbolic/text-editor-symbolic.svg"
-theme.tag_icon_mail = vertex_icons_dir .. "panel/22/applications-email-panel.svga"
+theme.tag_icon_mail = vertex_icons_dir .. "panel/22/applications-email-panel.svg"
 theme.tag_icon_file_manager = vertex_icons_dir .. "places/symbolic/folder-symbolic.svg"
+theme.tag_icon_twitter = vertex_icons_dir .. "apps/symbolic/twitter-symbolic.svg"
 
 theme.error_icon = vertex_icons_dir .. "status/16/error.svg"
 

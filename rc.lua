@@ -108,9 +108,9 @@ local tags = {
         icons = { theme.tag_icon_im, theme.tag_icon_file_manager }
     },
     {
-        names = { "www", "editor", "mail" },
-        layouts = { layouts[3], layouts[3], layouts[3], layouts[3] },
-        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail }
+        names = { "www", "editor", "mail", "twitter" },
+        layouts = { layouts[3], layouts[3], layouts[3], layouts[3], layouts[3] },
+        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail, theme.tag_icon_twitter }
     }
 }
 
@@ -851,6 +851,10 @@ if screen.count() == 3 then
         {
             rule = { class = "Firefox" },
             properties = { tag = screen[1].tags[1] }
+        },
+        {
+            rule = { class = "Birdie" },
+            properties = { tag = screen[3].tags[4] }
         }
     }
 elseif screen.count == 2 then

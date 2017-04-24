@@ -1,4 +1,4 @@
-Theme for [Awesome](http://awesome.naquadah.org/) WM 4.0+
+Theme for [Awesome](https://awesomewm.org/) WM 4.0+
 =========================================================
 | | |
  ------- | ------------- 

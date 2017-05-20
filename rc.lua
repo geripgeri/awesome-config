@@ -209,7 +209,7 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 -- Textclock
-local date = lain.widget.watch({
+local date = awful.widget.watch({
     timeout = 60,
     cmd = "date +'%m.%d'",
     settings = function()
@@ -217,7 +217,7 @@ local date = lain.widget.watch({
     end
 })
 
-local clockTZ1 = lain.widget.watch({
+local clockTZ1 = awful.widget.watch({
     timeout = 10,
     cmd = { "bash", "-c", "TZ=Europe/London date +'%R'" },
     settings = function()
@@ -225,7 +225,7 @@ local clockTZ1 = lain.widget.watch({
     end
 })
 
-local clockTZ2 = lain.widget.watch({
+local clockTZ2 = awful.widget.watch({
     timeout = 10,
     cmd = "date +'%R'",
     settings = function()
@@ -235,7 +235,7 @@ local clockTZ2 = lain.widget.watch({
 
 local taskicon = wibox.widget.imagebox(theme.widget_task)
 
-local task = lain.widget.watch({
+local task = awful.widget.watch({
     timeout = 60,
     cmd = { "bash", "-c", wunderline_task_count_cmd },
     settings = function()

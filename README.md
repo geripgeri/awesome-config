@@ -1,4 +1,6 @@
 Theme for [Awesome](https://awesomewm.org/) WM 4.0+
+
+[![Build Status](https://travis-ci.org/geripgeri/awesome-config.svg?branch=master)](https://travis-ci.org/geripgeri/awesome-config)
 =========================================================
 | | |
  ------- | ------------- 

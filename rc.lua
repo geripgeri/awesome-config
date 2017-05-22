@@ -209,26 +209,16 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 -- Textclock
-local date = awful.widget.watch(
-    "date +'%m.%d'", 60,
+local date = awful.widget.watch("date +'%m.%d'", 60,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.tasklist_fg_focus, output))
-    end
-)
+    end)
 
-local clockTZ1 = awful.widget.watch(
-    "bash -c \"TZ=Europe/London date +'%R'\"", 10,
+local clock = awful.widget.watch("date +'%R'", 10,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.waring, output))
-    end
-)
+    end)
 
-local clockTZ2 =  awful.widget.watch(
-    "date +'%R'", 10,
-    function(widget, output)
-        widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
-    end
-)
 
 local taskicon = wibox.widget.imagebox(theme.widget_task)
 
@@ -508,10 +498,9 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(task.widget, theme.bg_focus), arrl_dl,
             myredshift, arrl_ld,
             wibox.container.background(date, theme.bg_focus), arrl_dl,
-            clockTZ1, arrl_ld,
-            wibox.container.background(clockTZ2, theme.bg_focus), arrl_dl,
-            kbdlayout.widget, arrl_ld,
-            wibox.container.background(s.mylayoutbox, theme.bg_focus)
+            clock, arrl_ld,
+            wibox.container.background(kbdlayout.widget, theme.bg_focus), arrl_dl,
+            s.mylayoutbox
         },
     }
 end)
@@ -1005,17 +994,17 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function()
     local layout = awful.layout.getname(awful.layout.get(s))
 
     if #clients > 0 then -- Fine grained borders and floaters control
-    for _, c in pairs(clients) do -- Floaters always have borders
-    if awful.client.floating.get(c) or layout == "floating" then
-        c.border_width = beautiful.border_width
+        for _, c in pairs(clients) do -- Floaters always have borders
+            if awful.client.floating.get(c) or layout == "floating" then
+                c.border_width = beautiful.border_width
 
-        -- No borders with only one visible client
-    elseif #clients == 1 or layout == "max" then
-        c.border_width = 0
-    else
-        c.border_width = beautiful.border_width
-    end
-    end
+                -- No borders with only one visible client
+            elseif #clients == 1 or layout == "max" then
+                c.border_width = 0
+            else
+                c.border_width = beautiful.border_width
+            end
+        end
     end
 end)
 end

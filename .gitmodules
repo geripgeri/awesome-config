@@ -7,7 +7,3 @@
 	url = https://github.com/copycat-killer/lain.git
 	branch = master
 
-[submodule "icons"]
-	path = theme/vertex-icons
-	url = https://github.com/horst3180/vertex-icons.git
-	branch = master

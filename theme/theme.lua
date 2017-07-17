@@ -9,7 +9,6 @@ theme = {}
 
 themes_dir = os.getenv("HOME") .. "/.config/awesome/theme"
 icons_dir = themes_dir .. "/icons/"
-vertex_icons_dir = themes_dir .. "/vertex-icons/"
 
 theme.wallpaper_l = themes_dir .. "/wall_l.png"
 theme.wallpaper_c = themes_dir .. "/wall_c.png"
@@ -80,16 +79,6 @@ theme.widget_mail_on = icons_dir .. "mail_on.png"
 theme.widget_task = icons_dir .. "task.png"
 theme.widget_rs_on = icons_dir .. "redshift_on.png"
 theme.widget_rs_off = icons_dir .. "redshift_off.png"
-
-theme.tag_icon_browser = vertex_icons_dir .. "mimetypes/symbolic/text-html-symbolic.svg"
-theme.tag_icon_im = vertex_icons_dir .. "apps/symbolic/system-users-symbolic.svg"
-theme.tag_icon_ide = vertex_icons_dir .. "categories/symbolic/preferences-system-symbolic.svg"
-theme.tag_icon_editor = vertex_icons_dir .. "apps/symbolic/text-editor-symbolic.svg"
-theme.tag_icon_mail = vertex_icons_dir .. "panel/22/applications-email-panel.svg"
-theme.tag_icon_file_manager = vertex_icons_dir .. "places/symbolic/folder-symbolic.svg"
-theme.tag_icon_twitter = vertex_icons_dir .. "apps/symbolic/twitter-symbolic.svg"
-
-theme.error_icon = vertex_icons_dir .. "status/16/error.svg"
 
 theme.tasklist_disable_icon = true
 theme.tasklist_floating = ""

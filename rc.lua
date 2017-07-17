@@ -449,13 +449,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mypromptbox = awful.widget.prompt()
 
     -- Tags
-    current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
-
-    for i, t in ipairs(current_tags) do
-        awful.tag.seticon(tags[s.index].icons[i], t)
-        awful.tag.setproperty(t, "icon_only", 1)
-    end
-
+    awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.

@@ -474,6 +474,7 @@ awful.screen.connect_for_each_screen(function(s)
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             spr,
+            s.mylayoutbox,
             s.mytaglist,
             s.mypromptbox,
             spr,
@@ -494,7 +495,6 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.container.background(date, theme.bg_focus), arrl_dl,
             clock, arrl_ld,
             wibox.container.background(kbdlayout.widget, theme.bg_focus), arrl_dl,
-            s.mylayoutbox
         },
     }
 

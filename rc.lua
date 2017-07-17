@@ -77,7 +77,8 @@ graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
 tasks_for_today = "wunderline today"
-wunderline_task_count_cmd = "wunderline today | grep -oP '\\([0-9]\\)' | grep -oP '[0-9]' | awk '{ SUM += $1} END { print SUM }'"
+wunderline_task_count_cmd = 'bash -c "wunderline today | grep -oP \'\\([0-9]\\)\' | grep -oP \'[0-9]\' | awk \'{ SUM += $1} END { print SUM }\'\"'
+wunderline_overdue_task_count_cmd = 'bash -c "wunderline overdue | grep -oP \'\\([0-9]\\)\' | grep -oP \'[0-9]\' | awk \'{ SUM += $1} END { print SUM }\'\"'
 openwunderlist = "wunderline open"
 xmodmap = "xmodmap ~/.Xmodmap"
 
@@ -222,13 +223,16 @@ local clock = awful.widget.watch("date +'%R'", 10,
 
 local taskicon = wibox.widget.imagebox(theme.widget_task)
 
-local task = awful.widget.watch({
-    timeout = 60,
-    cmd = { "bash", "-c", wunderline_task_count_cmd },
-    settings = function()
-        widget:set_markup(markup(theme.taglist_fg_focus, output))
-    end
-})
+local task = awful.widget.watch(wunderline_task_count_cmd, 60,
+    function(widget, output)
+        widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
+    end)
+
+local overdue_task = awful.widget.watch(wunderline_overdue_task_count_cmd, 60,
+    function(widget, output)
+        widget:set_markup(" /  " .. markup(theme.waring, output))
+    end)
+
 
 taskicon:buttons(awful.util.table.join(awful.button({}, 1, function() open_terminal_and_hold(tasks_for_today) end),
     awful.util.table.join(awful.button({}, 3, function() awful.util.spawn(openwunderlist) end))))
@@ -490,7 +494,7 @@ awful.screen.connect_for_each_screen(function(s)
             cpuicon, cpu.widget, arrl_ld,
             wibox.container.background(tempicon, theme.bg_focus), wibox.container.background(temp.widget, theme.bg_focus), arrl_dl,
             baticon, bat.widget, arrl_ld,
-            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(task.widget, theme.bg_focus), arrl_dl,
+            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(task, theme.bg_focus), wibox.container.background(overdue_task, theme.bg_focus), arrl_dl,
             myredshift, arrl_ld,
             wibox.container.background(date, theme.bg_focus), arrl_dl,
             clock, arrl_ld,

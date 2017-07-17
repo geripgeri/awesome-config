@@ -80,6 +80,7 @@ top = terminal .. " -e top"
 tasks_for_today = "wunderline today"
 wunderline_task_count_cmd = "wunderline today | grep -oP '\\([0-9]\\)' | grep -oP '[0-9]' | awk '{ SUM += $1} END { print SUM }'"
 openwunderlist = "wunderline open"
+xmodmap = "xmodmap ~/.Xmodmap"
 
 screenshot = "spectacle -g"
 
@@ -709,7 +710,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() end),
+    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() os.execute(xmodmap) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     --awful.key({ modkey, "Control" }, "c", function() countdown.set() end),
 

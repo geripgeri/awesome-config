@@ -16,7 +16,6 @@ require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
-local drop = require("scratchdrop")
 local lain = require("lain")
 local menubar = require("menubar")
 -- }}}
@@ -504,6 +503,9 @@ awful.screen.connect_for_each_screen(function(s)
             s.mylayoutbox
         },
     }
+
+    -- Quake application
+    s.quake = lain.util.quake({ app = terminal })
 end)
 
 -- }}}
@@ -574,8 +576,10 @@ globalkeys = awful.util.table.join(-- Controling Awesome
         end),
 
     -- Show/Hide Wibox
-    awful.key({ modkey }, "b", function()
-        mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible
+    awful.key({ modkey }, "b", function ()
+        for s in screen do
+            s.mywibox.visible = not s.mywibox.visible
+        end
     end),
 
     -- Layout manipulation
@@ -605,12 +609,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, }, "Return", function() awful.util.spawn(terminal) end),
 
     -- Drop down terminal
-    awful.key({ modkey, }, "z", function() drop(terminal) end),
-
-    -- Widgets popups
-    awful.key({ altkey, }, "c", function() lain.widget.calendar:show(7) end),
-
-    --awful.key({ altkey,           }, "x",      function () awful.util.spawn_with_shell(musicplr) end),
+    awful.key({ modkey, }, "z", function() awful.screen.focused().quake:toggle() end),
 
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end),

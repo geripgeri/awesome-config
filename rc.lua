@@ -181,7 +181,7 @@ lain.layout.cascade.tile.ncol = 2
 
 
 local function set_wallpaper(screen)
-    local wallpappers = { theme.wallpaper_r, theme.wallpaper_c, theme.wallpaper_l }
+    local wallpappers = { theme.wallpaper_c, theme.wallpaper_l, theme.wallpaper_r }
     gears.wallpaper.maximized(wallpappers[screen], screen, true)
 end
 

@@ -81,6 +81,7 @@ wunderline_task_count_cmd = 'bash -c "wunderline today | grep -oP \'\\([0-9]\\)\
 wunderline_overdue_task_count_cmd = 'bash -c "wunderline overdue | grep -oP \'\\([0-9]\\)\' | grep -oP \'[0-9]\' | awk \'{ SUM += $1} END { print SUM }\'\"'
 openwunderlist = "wunderline open"
 xmodmap = "xmodmap ~/.Xmodmap"
+calculator = "gnome-calculator"
 
 screenshot = "spectacle -g"
 
@@ -709,6 +710,8 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
     awful.key({ altkey }, "Shift_L", function() kbdlayout.next() os.execute(xmodmap) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
+    awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
+
     --awful.key({ modkey, "Control" }, "c", function() countdown.set() end),
 
     -- Prompt

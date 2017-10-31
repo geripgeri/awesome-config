@@ -63,7 +63,8 @@ modkey = "Mod4"
 altkey = "Mod1"
 terminal = "urxvtc" or "xterm"
 shell = "zsh" or "bash"
-lock_command = "amixer -D pulse set Master 1+ toggle && xset dpms force off && i3lock -e -f -c 000000"
+lock_command = "xset dpms force off && i3lock -e -f -c 000000"
+mute_master_command = "amixer -D pulse set Master 1+ toggle"
 
 -- user defined
 browser = "firefox"
@@ -698,7 +699,13 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "c", function() os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
-    awful.key({ modkey }, "l", function() os.execute(lock_command) end),
+    awful.key({ modkey }, "l",
+       function()
+	  if volume_now.status ~= "off" then
+	     os.execute(mute_master_command)
+	  end
+	  os.execute(lock_command)
+    end),
     awful.key({ modkey }, "w", function() awful.util.spawn(browser) end),
     awful.key({ modkey, "Shift" }, "w", function() awful.util.spawn(browser_work) end),
     awful.key({ modkey, "Control" }, "w", function() awful.util.spawn(browser_incognito) end),

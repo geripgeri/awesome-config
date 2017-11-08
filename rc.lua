@@ -63,8 +63,10 @@ modkey = "Mod4"
 altkey = "Mod1"
 terminal = "urxvtc" or "xterm"
 shell = "zsh" or "bash"
-lock_command = "xset dpms force off && i3lock -e -f -c 000000"
-mute_master_command = "amixer -D pulse set Master 1+ toggle"
+toggle_master_command = "amixer -D pulse set Master 1+ toggle"
+toggle_mpd_command = "mpc toggle || ncmpc toggle || pms toggle"
+lock_command = "xset dpms force off && i3lock -e -f -n -i /tmp/screen.png -c 000000;" .. toggle_mpd_command .. ";" .. toggle_masterez_command
+
 
 -- user defined
 browser = "firefox"
@@ -707,7 +709,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
 	  end
 	  
 	  if volume_now.status ~= "off" then
-	     os.execute(mute_master_command)
+	     os.execute(toggle_master_command)
 	  end
 	  os.execute(lock_command)
     end),

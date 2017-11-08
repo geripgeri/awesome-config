@@ -701,6 +701,11 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- User programs
     awful.key({ modkey }, "l",
        function()
+	  if mpd_now.state == "play" then
+	     awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
+	     theme.mpd.update()	     
+	  end
+	  
 	  if volume_now.status ~= "off" then
 	     os.execute(mute_master_command)
 	  end

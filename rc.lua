@@ -342,6 +342,21 @@ local bat = lain.widget.bat({
     end
 })
 
+-- Current VPN Name
+local vpnicon = wibox.widget.imagebox(theme.widget_vpn_off)
+local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
+    function(widget, output)
+	if output == "" then
+	   vpnicon:set_image(theme.widget_vpn_off)
+  	   widget:set_markup("")
+	else
+	   vpnicon:set_image(theme.widget_vpn_on)
+	   widget:set_markup(" " .. output)
+	end
+    end)
+
+
+
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 local volume = lain.widget.alsa({

@@ -862,7 +862,8 @@ if screen.count() == 3 then
         },
         {
             rule = { class = "Slack" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag
+			      = screen[2].tags[1] }
         },
         {
             rule = { class = "Emacs" },
@@ -875,11 +876,8 @@ if screen.count() == 3 then
         {
             rule = { class = "Firefox" },
             properties = { tag = screen[1].tags[1] }
-        },
-        {
-            rule = { class = "Birdie" },
-            properties = { tag = screen[3].tags[4] }
-        }
+        }  
+
     }
 elseif screen.count == 2 then
     awful.rules.rules = {
@@ -911,7 +909,9 @@ elseif screen.count == 2 then
             properties = { tag = screen[1].tags[3] }
         },
         {
-            rule = { class = "sublime_text" },
+	   rule = { class = "sublime_text" },
+
+	   
             properties = { tag = screen[1].tags[3] }
         },
         {
@@ -946,7 +946,7 @@ else
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = screen[1].tags[3] }
+            properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
             rule = { class = "sublime_text" },
@@ -955,7 +955,19 @@ else
         {
             rule = { class = "Firefox" },
             properties = { tag = screen[1].tags[1] }
-        }
+        },
+	      {
+            rule = { class = "Gimp", role = "gimp-image-window-1" },
+	    callback = function(c)
+	       lain.widget.contrib.redshift:toggle()
+	end },    
+
+	{
+            rule = { class = "Kodi" },
+	    callback = function(c)
+	       toggle_wibox()
+	end }    
+
     }
 end
 -- }}}

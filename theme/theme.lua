@@ -17,17 +17,19 @@ theme.font = "Terminus 9"
 theme.fg_normal = "#ccd0c4"
 theme.fg_focus = "#55FF00"
 theme.bg_normal = "#002b36"
-theme.bg_focus = "#083a47"
-theme.border_width = "1"
-theme.border_normal = theme.bg_normal
+theme.bg_focus = "#405d27"
 theme.border_focus = "#7F7F7F"
 theme.border_marked = "#CC9393"
 theme.titlebar_bg_focus = "#fdf6e3"
+theme.waring = "#FF0000"
+
+
+theme.border_width = "1"
+theme.border_normal = theme.bg_normal
 theme.titlebar_bg_normal = theme.titlebar_bg_focus
 theme.taglist_fg_focus = theme.fg_focus
-theme.tasklist_fg_focus = theme.taglist_fg_focus
-theme.tasklist_bg_focus = theme.bg_normal
-theme.waring = "#FF0000"
+theme.tasklist_fg_focus = theme.fg_focus
+theme.tasklist_bg_focus = theme.bg_focus
 theme.textbox_widget_margin_top = 1
 theme.notify_fg = theme.fg_normal
 theme.notify_bg = theme.bg_normal
@@ -75,6 +77,9 @@ theme.widget_vol_mute = icons_dir .. "vol_mute.png"
 theme.widget_task = icons_dir .. "task.png"
 theme.widget_rs_on = icons_dir .. "redshift_on.png"
 theme.widget_rs_off = icons_dir .. "redshift_off.png"
+theme.widget_vpn_on = icons_dir .. "vpn_on.png"
+theme.widget_vpn_off = icons_dir .. "vpn_off.png"
+
 
 theme.tasklist_disable_icon = true
 theme.tasklist_floating = ""

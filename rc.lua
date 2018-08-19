@@ -443,12 +443,35 @@ lain.layout.cascade.tile.extra_padding = 5
 lain.layout.cascade.tile.nmaster = 5
 lain.layout.cascade.tile.ncol = 2
 
-
--- Separators
 local spr = wibox.widget.textbox(' ')
 local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
 local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
 
+function generate_right_section(widgets)
+   -- Separators
+   local ret = {layout = wibox.layout.fixed.horizontal }
+
+   table.insert(ret, wibox.widget.systray())
+   table.insert(ret, arrl_ld)
+   
+   for i,v in ipairs(widgets) do
+      if i % 4 == 1 or i % 4 == 2 then
+	 table.insert(ret, wibox.container.background(v, theme.bg_focus))
+	 if i %4  == 2 then
+	    table.insert(ret, arrl_dl)
+	 end
+      else
+	 table.insert(ret, v)
+	 if i % 4 == 0 then
+	    table.insert(ret, arrl_ld)
+	 end
+      end
+    --  table.insert(ret, spr)
+   end
+   
+   return ret
+end
+						   
 awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s.index)
 
@@ -456,7 +479,14 @@ awful.screen.connect_for_each_screen(function(s)
     s.mypromptbox = awful.widget.prompt()
 
     -- Tags
-    awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
+--    awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
+    current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
+
+    for i, t in ipairs(current_tags) do
+        awful.tag.seticon(tags[s.index].icons[i], t)
+        awful.tag.setproperty(t, "icon_only", 1)
+--	awful.tag.setproperty(t, "spacing", 5)
+    end
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
@@ -466,11 +496,21 @@ awful.screen.connect_for_each_screen(function(s)
         awful.button({}, 4, function() awful.layout.inc(1) end),
         awful.button({}, 5, function() awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, {
+        shape = function(cr, width, height)
+	  gears.shape.powerline (cr, width, height, -10)
+	end
+    })
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
-
+    s.mytasklist = awful.widget.tasklist(s,awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
+        --bg_focus = theme.tasklist_bg_focus,
+        shape = function(cr, width, height)
+	   gears.shape.powerline (cr, width, height, -10)
+	end,
+	align = "center"
+    })
+    
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
 
@@ -480,29 +520,13 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            spr,
-            s.mylayoutbox,
             s.mytaglist,
             s.mypromptbox,
-            spr,
         },
         s.mytasklist, -- Middle widget
-        {
-            -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(), spr, arrl_ld,
-            wibox.container.background(mpdicon, theme.bg_focus), wibox.container.background(theme.mpd.widget, theme.bg_focus), arrl_dl,
-            volicon, volume.widget, arrl_ld,
-            wibox.container.background(memicon, theme.bg_focus), wibox.container.background(mem.widget, theme.bg_focus), arrl_dl,
-            cpuicon, cpu.widget, arrl_ld,
-            wibox.container.background(tempicon, theme.bg_focus), wibox.container.background(temp.widget, theme.bg_focus), arrl_dl,
-            baticon, bat.widget, arrl_ld,
-            wibox.container.background(taskicon, theme.bg_focus), wibox.container.background(task, theme.bg_focus), wibox.container.background(overdue_task, theme.bg_focus), arrl_dl,
-            myredshift, arrl_ld,
-            wibox.container.background(date, theme.bg_focus), arrl_dl,
-            clock, arrl_ld,
-            wibox.container.background(kbdlayout.widget, theme.bg_focus), arrl_dl,
-        },
+	-- Right widgets
+	
+	generate_right_section({ vpnicon, vpn, mpdicon, theme.mpd.widget, volicon, volume.widget, memicon, mem.widget, cpuicon, cpu.widget, tempicon, temp.widget, baticon, bat.widget, myredshift, date, clock }),
     }
 
     -- Quake application

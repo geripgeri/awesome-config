@@ -528,6 +528,13 @@ awful.screen.connect_for_each_screen(function(s)
     s.quake = lain.util.quake({ app = terminal })
 end)
 
+function toggle_wibox()
+ for s in screen do
+            s.mywibox.visible = not s.mywibox.visible
+ end
+end
+
+
 -- }}}
 
 -- {{{ Mouse Bindings
@@ -597,9 +604,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
 
     -- Show/Hide Wibox
     awful.key({ modkey }, "b", function ()
-        for s in screen do
-            s.mywibox.visible = not s.mywibox.visible
-        end
+	  toggle_wibox()
     end),
 
     -- Layout manipulation
@@ -1007,6 +1012,14 @@ client.connect_signal("manage", function(c, startup)
 
         awful.titlebar(c, { size = 16 }):set_widget(layout)
     end
+end)
+
+client.connect_signal("unmanage", function(c)
+			 if c.name == "Kodi" then
+			    toggle_wibox()
+			 elseif c.role == "gimp-image-window-1" then
+			    lain.widget.contrib.redshift:toggle()
+			 end
 end)
 
 -- No border for maximized clients

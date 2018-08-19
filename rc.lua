@@ -65,8 +65,8 @@ terminal = "urxvtc" or "xterm"
 shell = "zsh" or "bash"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
 toggle_mpd_command = "mpc toggle || ncmpc toggle || pms toggle"
-lock_command = "xset dpms force off && i3lock -e -f -n -i /tmp/screen.png -c 000000;" .. toggle_mpd_command .. ";" .. toggle_masterez_command
-
+lock_command = "xset dpms force off && i3lock -e -f -n -i /tmp/screen.png -c 000000;" .. toggle_mpd_command .. ";" .. toggle_master_command
+get_current_vpn_connection_name = 'bash -c "nmcli connection show --active | grep vpn | awk \'{print $1}\'"'
 
 -- user defined
 browser = "firefox"

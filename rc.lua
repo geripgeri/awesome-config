@@ -79,10 +79,6 @@ gui_editor = "subl"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
-tasks_for_today = "wunderline today"
-wunderline_task_count_cmd = 'bash -c "wunderline today | grep -oP \'\\([0-9]\\)\' | grep -oP \'[0-9]\' | awk \'{ SUM += $1} END { print SUM }\'\"'
-wunderline_overdue_task_count_cmd = 'bash -c "wunderline overdue | grep -oP \'\\([0-9]\\)\' | grep -oP \'[0-9]\' | awk \'{ SUM += $1} END { print SUM }\'\"'
-openwunderlist = "wunderline open"
 xmodmap = "xmodmap ~/.Xmodmap"
 calculator = "gnome-calculator"
 
@@ -224,22 +220,10 @@ local clock = awful.widget.watch("date +'%R'", 10,
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end)
 
-
-local taskicon = wibox.widget.imagebox(theme.widget_task)
-
-local task = awful.widget.watch(wunderline_task_count_cmd, 60,
+local clock = awful.widget.watch("date +'%R'", 5,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end)
-
-local overdue_task = awful.widget.watch(wunderline_overdue_task_count_cmd, 60,
-    function(widget, output)
-        widget:set_markup(" /  " .. markup(theme.waring, output))
-    end)
-
-
-taskicon:buttons(awful.util.table.join(awful.button({}, 1, function() open_terminal_and_hold(tasks_for_today) end),
-    awful.util.table.join(awful.button({}, 3, function() awful.util.spawn(openwunderlist) end))))
 
 local kbdlayout = lain.widget.contrib.kbdlayout({
     layouts = {

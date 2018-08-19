@@ -33,7 +33,7 @@ Notable features
 - Non-empty tag browsing
 - Dynamic useless gaps
 - Dynamic tagging
-- Wunderlist integration
+- -Wunderlist integration-
 
 Based on: Powerarrow Darker inspired by ***[romockee](https://github.com/romockee/powerarrow)***
 

@@ -745,9 +745,10 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() os.execute(xmodmap) end),
+--    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() os.execute(xmodmap) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
+    awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    
 
     --awful.key({ modkey, "Control" }, "c", function() countdown.set() end),
 

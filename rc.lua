@@ -784,9 +784,6 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    
-
-    --awful.key({ modkey, "Control" }, "c", function() countdown.set() end),
-
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),
     awful.key({ modkey }, "x",

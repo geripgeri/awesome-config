@@ -81,7 +81,6 @@ musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
 xmodmap = "xmodmap ~/.Xmodmap"
 calculator = "gnome-calculator"
-
 screenshot = "spectacle -g"
 
 -- }}}
@@ -91,6 +90,7 @@ layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
     awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.right,
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal
 }
@@ -99,19 +99,19 @@ awful.layout.layouts = layouts
 
 local tags = {
     {
-        names = { "www", "IDE", "editor", "im" },
+        names = { "www", "editor", "mail", "im" },
         layouts = { layouts[2], layouts[2], layouts[2], layouts[2] },
-        icons = { theme.tag_icon_browser, theme.tag_icon_ide, theme.tag_icon_editor, theme.tag_icon_im }
+        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail, theme.tag_icon_im }
     },
     {
         names = { "im", "files" },
-        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] },
+        layouts = { layouts[2], layouts[2] },
         icons = { theme.tag_icon_im, theme.tag_icon_file_manager }
     },
     {
-        names = { "www", "editor", "mail", "twitter" },
-        layouts = { layouts[3], layouts[3], layouts[3], layouts[3], layouts[3] },
-        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail, theme.tag_icon_twitter }
+        names = { "www", "editor", "mail" },
+        layouts = { layouts[3], layouts[3], layouts[3] },
+        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail }
     }
 }
 
@@ -215,25 +215,11 @@ local date = awful.widget.watch("date +'%m.%d (%a)'", 60,
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end)
 
-local clock = awful.widget.watch("date +'%R'", 5,
+local clock = awful.widget.watch("date +'%R '", 5,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end)
 
-local kbdlayout = lain.widget.contrib.kbdlayout({
-    layouts = {
-        { layout = "us" },
-        { layout = "hu" }
-    },
-    settings = function()
-        if kbdlayout_now.variant then
-            widget:set_text(" " .. kbdlayout_now.layout ..
-                    "/" .. kbdlayout_now.variant .. " ")
-        else
-            widget:set_text(" " .. kbdlayout_now.layout .. " ")
-        end
-    end
-})
 
 -- Redshift widget
 local rs_on = theme.widget_rs_on
@@ -247,6 +233,11 @@ lain.widget.contrib.redshift:attach(myredshift,
         else
             myredshift:set_image(rs_off)
         end
+    end)
+
+local empytwidget =awful.widget.watch("", 60,
+    function(widget, output)
+        widget:set_markup(" ")
     end)
 
 -- MPD
@@ -306,9 +297,9 @@ local temp = lain.widget.temp({
     timeout = 10,
     settings = function()
         if coretemp_now <= 80 then
-            widget:set_text(" " .. coretemp_now .. " C ")
+            widget:set_text(" " .. coretemp_now .. " °C ")
         else
-            widget:set_markup(markup(theme.waring, " " .. coretemp_now .. " C "))
+            widget:set_markup(markup(theme.waring, " " .. coretemp_now .. " °C "))
         end
     end
 })
@@ -324,7 +315,7 @@ local bat = lain.widget.bat({
         end
 
         if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
-            widget:set_markup(" AC ")
+            widget:set_markup("")
             baticon:set_image(theme.widget_ac)
             return
         elseif tonumber(bat_now.perc) <= 5 then
@@ -343,10 +334,10 @@ local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
     function(widget, output)
 	if output == "" then
 	   vpnicon:set_image(theme.widget_vpn_off)
-  	   widget:set_markup("")
+  	   widget:set_text("")
 	else
 	   vpnicon:set_image(theme.widget_vpn_on)
-	   widget:set_markup(" " .. output)
+	   widget:set_text(" " .. output)
 	end
     end)
 
@@ -355,28 +346,22 @@ local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 local volume = lain.widget.alsa({
-    settings = function()
-        if volume_now.status == "off" then
-            volicon:set_image(theme.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(theme.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(theme.widget_vol_low)
-        else
-            volicon:set_image(theme.widget_vol)
-        end
-
-        widget:set_text(volume_now.level .. "% ")
-    end
+      settings = function()
+	 if volume_now.status == "off" then
+	    widget:set_markup(markup(theme.waring, " " .. volume_now.level .. "%"))
+	    volicon:set_image(theme.widget_vol_mute)
+	 else
+	    widget:set_text(" " .. volume_now.level .. "% ")
+	    if tonumber(volume_now.level) <= 20 then
+	       volicon:set_image(theme.widget_vol_no)
+	    elseif tonumber(volume_now.level) <= 50 then
+	       volicon:set_image(theme.widget_vol_low)
+	    else
+	       volicon:set_image(theme.widget_vol)
+	    end
+	 end
+      end
 })
-
--- Separators
-local spr = wibox.widget.textbox(' ')
-arrl = wibox.widget.imagebox()
-arrl:set_image(beautiful.arrl)
-arrl_dl = separators.arrow_left(beautiful.bg_focus, "alpha")
-arrl_ld = separators.arrow_left("alpha", beautiful.bg_focus)
-
 
 awful.util.taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
     awful.button({ modkey }, 1, function(t)
@@ -438,13 +423,12 @@ lain.layout.cascade.tile.extra_padding = 5
 lain.layout.cascade.tile.nmaster = 5
 lain.layout.cascade.tile.ncol = 2
 
-local spr = wibox.widget.textbox(' ')
+-- Separators
 local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
 local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
 
 function generate_right_section(widgets)
-   -- Separators
-   local ret = {layout = wibox.layout.fixed.horizontal }
+   local ret = { layout = wibox.layout.fixed.horizontal }
 
    table.insert(ret, wibox.widget.systray())
    table.insert(ret, arrl_ld)
@@ -452,7 +436,7 @@ function generate_right_section(widgets)
    for i,v in ipairs(widgets) do
       if i % 4 == 1 or i % 4 == 2 then
 	 table.insert(ret, wibox.container.background(v, theme.bg_focus))
-	 if i %4  == 2 then
+	 if i % 4  == 2 then
 	    table.insert(ret, arrl_dl)
 	 end
       else
@@ -461,9 +445,9 @@ function generate_right_section(widgets)
 	    table.insert(ret, arrl_ld)
 	 end
       end
-    --  table.insert(ret, spr)
    end
-   
+
+   table.remove(ret,table.getn(ret))
    return ret
 end
 						   
@@ -474,37 +458,86 @@ awful.screen.connect_for_each_screen(function(s)
     s.mypromptbox = awful.widget.prompt()
 
     -- Tags
---    awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
     current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
 
     for i, t in ipairs(current_tags) do
-        awful.tag.seticon(tags[s.index].icons[i], t)
-        awful.tag.setproperty(t, "icon_only", 1)
---	awful.tag.setproperty(t, "spacing", 5)
+       awful.tag.seticon(tags[s.index].icons[i], t)
+       awful.tag.setproperty(t, "icon_only", 1)
     end
 
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(awful.util.table.join(awful.button({}, 1, function() awful.layout.inc(1) end),
-        awful.button({}, 3, function() awful.layout.inc(-1) end),
-        awful.button({}, 4, function() awful.layout.inc(1) end),
-        awful.button({}, 5, function() awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, {
-        shape = function(cr, width, height)
-	  gears.shape.powerline (cr, width, height, -10)
-	end
-    })
+    s.mytaglist = awful.widget.taglist {
+       screen  = s,
+       filter  = awful.widget.taglist.filter.all,
+       style   = {
+	  shape = function(cr, width, height)
+	     gears.shape.powerline (cr, width, height, -10)
+	  end
+       },
+       layout   = {
+	  spacing_widget = {
+	     shape = function(cr, width, height)
+		gears.shape.powerline (cr, width, height, -10)
+	     end,
+	  },
+	  layout  = wibox.layout.fixed.horizontal
+       },
+       widget_template = {
+	  {
+	     {
+                {
+		   {
+		      id     = 'icon_role',
+		      widget = wibox.widget.imagebox,
+		   },
+		   widget  = wibox.container.margin,
+                },
+		{
+		   id     = 'text_role',
+		   widget = wibox.widget.textbox,
+		},
+                layout = wibox.layout.fixed.horizontal,
+	     },
+	     left  = 12,
+	     right = 12,
+	     widget = wibox.container.margin
+	  },
+	  id     = 'background_role',
+	  widget = wibox.container.background,
+       },
+       buttons = awful.util.taglist_buttons
+    }
+    
+    s.mytasklist = awful.widget.tasklist {
+       screen   = s,
+       filter   = awful.widget.tasklist.filter.currenttags,
+       buttons  = awful.util.tasklist_buttons,
+       style    = {
+	  spacing = -10,
+	  shape = function(cr, width, height)
+	     gears.shape.powerline (cr, width, height, -10)
+	  end,
+       },
+       -- Notice that there is *NO* wibox.wibox prefix, it is a template,
+       -- not a widget instance.
+       widget_template = {
+	  {
+	     {
+                {
+		   id     = 'text_role',
+		   widget = wibox.widget.textbox,
+                },
+		layout = wibox.layout.fixed.horizontal,
+	     },
+	     left  = 15,
+	     right = 0,
+	     widget = wibox.container.margin
+	  },
+	  id     = 'background_role',
+	  widget = wibox.container.background,
+       },
+    }
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s,awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
-        --bg_focus = theme.tasklist_bg_focus,
-        shape = function(cr, width, height)
-	   gears.shape.powerline (cr, width, height, -10)
-	end,
-	align = "center"
-    })
     
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
@@ -521,7 +554,7 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
 	-- Right widgets
 	
-	generate_right_section({ vpnicon, vpn, mpdicon, theme.mpd.widget, volicon, volume.widget, memicon, mem.widget, cpuicon, cpu.widget, tempicon, temp.widget, baticon, bat.widget, myredshift, date, clock }),
+	generate_right_section({ vpnicon, vpn, myredshift, empytwidget, mpdicon, theme.mpd.widget, volicon, volume.widget, memicon, mem.widget, cpuicon, cpu.widget, tempicon, temp.widget, baticon, bat.widget, date, clock }),
     }
 
     -- Quake application
@@ -599,7 +632,10 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- Panic mode, allways switch to screen 1, tag 2 named 'IDE' ;)
     awful.key({ altkey }, "a",
         function()
-            awful.tag.viewonly(awful.tag.gettags(1)[2])
+	   awful.tag.viewonly(awful.tag.gettags(1)[2])
+	   if screen.count() > 1 then
+	      awful.tag.viewonly(awful.tag.gettags(2)[2])
+	   end
         end),
 
     -- Show/Hide Wibox
@@ -745,7 +781,6 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
---    awful.key({ altkey }, "Shift_L", function() kbdlayout.next() os.execute(xmodmap) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    
@@ -851,7 +886,7 @@ if screen.count() == 3 then
         },
         {
             rule = { class = "Thunderbird" },
-            properties = { tag = screen[3].tags[3] }
+            properties = { tag = screen[3].tags[3], switchtotag = true }
         },
         {
             rule = { class = "Skype" },
@@ -863,24 +898,19 @@ if screen.count() == 3 then
         },
         {
             rule = { class = "Slack" },
-            properties = { tag
-			      = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1] }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = screen[3].tags[2] }
-        },
-        {
-            rule = { class = "sublime_text" },
-            properties = { tag = screen[3].tags[2] }
+            properties = { tag = screen[3].tags[2], switchtotag = true }
         },
         {
             rule = { class = "Firefox" },
-            properties = { tag = screen[1].tags[1] }
+            properties = { tag = screen[1].tags[1], switchtotag = true }
         }  
 
     }
-elseif screen.count == 2 then
+elseif screen.count() == 2 then
     awful.rules.rules = {
         {
             rule = {},
@@ -890,34 +920,40 @@ elseif screen.count == 2 then
                 focus = awful.client.focus.filter,
                 keys = clientkeys,
                 buttons = clientbuttons,
-                size_hints_honor = false
+                size_hints_honor = false,
+		screen = awful.screen.preferred,
+                placement = awful.placement.no_overlap + awful.placement.no_offscreen
             }
+        },
+	{
+            rule = { class = "Thunderbird" },
+            properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.top_right,
+			   honor_workarea = true }
         },
         {
             rule = { class = "Telegram" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.bottom_right,
+			   honor_workarea = true }
         },
         {
             rule = { class = "Slack" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.top_left,
+			   honor_workarea = true }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = screen[1].tags[3] }
-        },
-        {
-	   rule = { class = "sublime_text" },
-
-	   
-            properties = { tag = screen[1].tags[3] }
+            properties = { tag = screen[1].tags[2], switchtotag = true }
         },
         {
             rule = { class = "Firefox" },
-            properties = { tag = screen[1].tags[1] }
+            properties = { tag = screen[1].tags[1], switchtotag = true }
         }
     }
 else
@@ -943,21 +979,21 @@ else
         },
         {
             rule = { class = "Slack" },
-            properties = { tag = screen[1].tags[4] }
+            properties = { tag = screen[1].tags[4], switchtotag = true }
         },
         {
             rule = { class = "Emacs" },
+            properties = { tag = screen[1].tags[2], switchtotag = true }
+        },
+	{
+            rule = { class = "Thunderbird" },
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
-            rule = { class = "sublime_text" },
-            properties = { tag = screen[1].tags[3] }
-        },
-        {
             rule = { class = "Firefox" },
-            properties = { tag = screen[1].tags[1] }
+            properties = { tag = screen[1].tags[1], switchtotag = true }
         },
-	      {
+	{
             rule = { class = "Gimp", role = "gimp-image-window-1" },
 	    callback = function(c)
 	       lain.widget.contrib.redshift:toggle()

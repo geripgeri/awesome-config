@@ -7,3 +7,8 @@
 	url = https://github.com/copycat-killer/lain.git
 	branch = master
 
+[submodule "theme/icons"]
+	path = theme/icons
+	url = https://github.com/google/material-design-icons.git
+	branch = master
+

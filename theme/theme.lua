@@ -8,13 +8,13 @@
 theme = {}
 
 theme.font = "Terminus 9"
-theme.fg_normal = "#ccd0c4"
+theme.fg_normal = "#CCD0C4"
 theme.fg_focus = "#55FF00"
-theme.bg_normal = "#002b36"
-theme.bg_focus = "#405d27"
+theme.bg_normal = "#002B36"
+theme.bg_focus = "#405D27"
 theme.border_focus = "#7F7F7F"
 theme.border_marked = "#CC9393"
-theme.titlebar_bg_focus = "#fdf6e3"
+theme.titlebar_bg_focus = "#FDF6E3"
 theme.waring = "#FF0000"
 theme.border_width = "1"
 theme.border_normal = theme.bg_normal

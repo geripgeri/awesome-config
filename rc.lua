@@ -523,21 +523,25 @@ awful.screen.connect_for_each_screen(function(s)
        widget_template = {
 	  {
 	     {
-                {
-		   id     = 'text_role',
-		   widget = wibox.widget.textbox,
-                },
-		layout = wibox.layout.fixed.horizontal,
+		{
+		   {
+		      id     = 'text_role',
+		      widget = wibox.widget.textbox,
+		   },
+		   layout = wibox.layout.fixed.horizontal,
+		},
+		left  = 15,
+		right = 0,
+		widget = wibox.container.margin
 	     },
-	     left  = 15,
-	     right = 0,
-	     widget = wibox.container.margin
+	     id     = 'background_role',
+	     widget = wibox.container.background,
 	  },
-	  id     = 'background_role',
-	  widget = wibox.container.background,
+	  left  = -10,
+	  right = 0,
+	  widget = wibox.container.margin
        },
     }
-
     
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 18, bg = theme.bg_normal, fg = theme.fg_normal })
@@ -784,6 +788,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    
+
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),
     awful.key({ modkey }, "x",

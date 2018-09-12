@@ -65,7 +65,6 @@ terminal = "urxvtc" or "xterm"
 shell = "zsh" or "bash"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
 toggle_mpd_command = "mpc toggle || ncmpc toggle || pms toggle"
-lock_command = "xset dpms force off && i3lock -e -f -n -i /tmp/screen.png -c 000000;" .. toggle_mpd_command .. ";" .. toggle_master_command
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
 
 -- user defined
@@ -766,9 +765,13 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- User programs
     awful.key({ modkey }, "l",
        function()
+	  local semicolon = ";"
+	  local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. toggle_master_command .. semicolon
+
 	  if mpd_now.state == "play" then
-	     awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-	     theme.mpd.update()	     
+	     awful.util.spawn_with_shell(toggle_mpd_command)
+	     theme.mpd.update()
+	     lock_command = lock_command .. toggle_mpd_command .. semicolon
 	  end
 	  
 	  if volume_now.status ~= "off" then

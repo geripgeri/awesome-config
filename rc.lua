@@ -66,7 +66,7 @@ shell = "zsh" or "bash"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
 toggle_mpd_command = "mpc toggle || ncmpc toggle || pms toggle"
 lock_command = "xset dpms force off && i3lock -e -f -n -i /tmp/screen.png -c 000000;" .. toggle_mpd_command .. ";" .. toggle_master_command
-get_current_vpn_connection_name = 'bash -c "nmcli connection show --active | grep vpn | awk \'{print $1}\'"'
+get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
 
 -- user defined
 browser = "firefox"
@@ -337,7 +337,7 @@ local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
   	   widget:set_text("")
 	else
 	   vpnicon:set_image(theme.widget_vpn_on)
-	   widget:set_text(" " .. output)
+	   widget:set_text(" " .. string.gsub(output, '\n$', ' '))
 	end
     end)
 

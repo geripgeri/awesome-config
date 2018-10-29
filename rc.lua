@@ -257,7 +257,7 @@ theme.mpd = lain.widget.mpd({
             mpdicon:set_image(theme.widget_music)
         end
 
-        widget:set_markup(markup.font(theme.font, markup("#EA6F81", artist) .. title))
+        widget:set_markup(markup(theme.waring, artist) .. title)
     end
 })
 
@@ -551,8 +551,8 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
-            s.mypromptbox,
+	    s.mypromptbox,
+	    s.mytaglist,
         },
         s.mytasklist, -- Middle widget
 	-- Right widgets
@@ -566,7 +566,7 @@ end)
 
 function toggle_wibox()
  for s in screen do
-            s.mywibox.visible = not s.mywibox.visible
+    s.mywibox.visible = not s.mywibox.visible
  end
 end
 

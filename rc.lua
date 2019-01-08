@@ -601,8 +601,9 @@ globalkeys = awful.util.table.join(-- Controling Awesome
 
     -- Default client focus
     awful.key({ altkey }, "k",
-        function()
-            if client.focus then client.focus:raise() end
+       function()
+	    awful.client.focus.byidx(1)
+	    if client.focus then client.focus:raise() end
         end),
     awful.key({ altkey }, "j",
         function()

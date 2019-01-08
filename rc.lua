@@ -245,12 +245,12 @@ mpdicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.
 theme.mpd = lain.widget.mpd({
     settings = function()
         if mpd_now.state == "play" then
-            artist = " " .. mpd_now.artist .. " "
-            title = mpd_now.title .. " "
+            artist = " playing "
+            title =  ""
             mpdicon:set_image(theme.widget_music_on)
         elseif mpd_now.state == "pause" then
-            artist = " mpd "
-            title = "paused "
+            artist = " paused "
+            title = ""
         else
             artist = ""
             title = ""

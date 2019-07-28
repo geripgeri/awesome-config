@@ -62,6 +62,8 @@ modkey = "Mod4"
 altkey = "Mod1"
 terminal = "urxvtc" or "xterm"
 shell = "bash"
+volume_cmd = "amixer"
+volume_channel = "Master"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
 toggle_mpd_command = "mpc toggle || ncmpc toggle"
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
@@ -209,137 +211,33 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 -- Textclock
-local date = awful.widget.watch("date +'%m.%d (%a)'", 60,
+local date = awful.widget.watch("date +'%m.%d (%a) %R'", 5,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
-    end)
-
-local clock = awful.widget.watch("date +'%R '", 5,
-    function(widget, output)
-        widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
-    end)
-
-
--- Redshift widget
-local rs_on = theme.widget_rs_on
-local rs_off = theme.widget_rs_off
-
-local myredshift = wibox.widget.imagebox()
-lain.widget.contrib.redshift:attach(myredshift,
-    function(active)
-        if active then
-            myredshift:set_image(rs_on)
-        else
-            myredshift:set_image(rs_off)
-        end
-    end)
-
-local empytwidget =awful.widget.watch("", 60,
-    function(widget, output)
-        widget:set_markup(" ")
     end)
 
 -- MPD
-local mpdicon = wibox.widget.imagebox(theme.widget_music)
-mpdicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
-theme.mpd = lain.widget.mpd({
-    settings = function()
-        if mpd_now.state == "play" then
-            artist = " playing "
-            title =  ""
-            mpdicon:set_image(theme.widget_music_on)
-        elseif mpd_now.state == "pause" then
-            artist = " paused "
-            title = ""
-        else
-            artist = ""
-            title = ""
-            mpdicon:set_image(theme.widget_music)
-        end
+local mpd = awful.widget.watch(shell .. " -c \"mpc status | grep playing | wc -l\"", 5,
+    function(widget, output)
+       playing = (tonumber(output) or 1)
+       if playing == 1 then
+	  widget:set_markup(" 🎵 ")
+       else
+	  widget:set_markup(" ⏸ ")
+       end
+end)
+mpd:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
 
-        widget:set_markup(markup(theme.waring, artist) .. title)
-    end
-})
-
--- MEM
-local memicon = wibox.widget.imagebox(theme.widget_mem)
-local mem = lain.widget.mem({
-    settings = function()
-        if mem_now.free >= 0.3 then
-            widget:set_text(" " .. string.format("%.2f", mem_now.free / 1000) .. " GB ")
-        else
-            widget:set_markup(markup(theme.waring, string.format("%.2f", mem_now.free / 1000) .. " GB "))
-        end
-    end
-})
-
--- CPU
-local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
-local cpu = lain.widget.cpu({
-    settings = function()
-        if cpu_now.usage <= 80 then
-            widget:set_text(" " .. cpu_now.usage .. "% ")
-        else
-            widget:set_markup(markup(theme.waring, " " .. cpu_now.usage .. "% "))
-        end
-    end
-})
-
-cpuicon:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
---cpu:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
-
-
--- Coretemp
-local tempicon = wibox.widget.imagebox(theme.widget_temp)
-local temp = lain.widget.temp({
-    tempfile = "/sys/class/thermal/thermal_zone1/temp",
-    timeout = 10,
-    settings = function()
-        if coretemp_now <= 80 then
-            widget:set_text(" " .. coretemp_now .. " °C ")
-        else
-            widget:set_markup(markup(theme.waring, " " .. coretemp_now .. " °C "))
-        end
-    end
-})
-
--- Battery
-local baticon = wibox.widget.imagebox(theme.widget_battery)
-local bat = lain.widget.bat({
-    settings = function()
-        if tonumber(bat_now.perc) >= 15 then
-            widget:set_markup(bat_now.perc .. "% / " .. bat_now.time)
-        else
-            widget:set_markup(markup(theme.waring, bat_now.perc .. "% / " .. bat_now.time))
-        end
-
-        if bat_now.perc == "N/A" or bat_now.status == "Full" or bat_now.status == "Charging" then
-            widget:set_markup("")
-            baticon:set_image(theme.widget_ac)
-            return
-        elseif tonumber(bat_now.perc) <= 5 then
-            baticon:set_image(theme.widget_battery_empty)
-        elseif tonumber(bat_now.perc) <= 15 then
-            baticon:set_image(theme.widget_battery_low)
-        else
-            baticon:set_image(theme.widget_battery)
-        end
-    end
-})
 
 -- Current VPN Name
-local vpnicon = wibox.widget.imagebox(theme.widget_vpn_off)
 local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
     function(widget, output)
 	if output == "" then
-	   vpnicon:set_image(theme.widget_vpn_off)
-  	   widget:set_text("")
+  	   widget:set_text("🔓")
 	else
-	   vpnicon:set_image(theme.widget_vpn_on)
-	   widget:set_text(" " .. string.gsub(output, '\n$', ' '))
+	   widget:set_text("🔐 " .. string.gsub(output, '\n$', ' '))
 	end
     end)
-
 
 -- New email count
 local mail = awful.widget.watch(get_new_email_count, 10,
@@ -349,24 +247,91 @@ local mail = awful.widget.watch(get_new_email_count, 10,
 mail:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(email_client) end)))
 
 -- ALSA volume
-local volicon = wibox.widget.imagebox(theme.widget_vol)
-local volume = lain.widget.alsa({
-      settings = function()
-	 if volume_now.status == "off" then
-	    widget:set_markup(markup(theme.waring, " " .. volume_now.level .. "%"))
-	    volicon:set_image(theme.widget_vol_mute)
-	 else
-	    widget:set_text(" " .. volume_now.level .. "% ")
-	    if tonumber(volume_now.level) <= 20 then
-	       volicon:set_image(theme.widget_vol_no)
-	    elseif tonumber(volume_now.level) <= 50 then
-	       volicon:set_image(theme.widget_vol_low)
-	    else
-	       volicon:set_image(theme.widget_vol)
-	    end
-	 end
-      end
-})
+local volume = awful.widget.watch(shell .. " -c 'amixer get Master'", 5,
+    function(widget, output)
+       local level, status = string.match(output, "([%d]+)%%.*%[([%l]*)")
+       
+       if status == "off" then
+	  widget:set_markup(markup(theme.waring, "🔇 " .. level .. "% "))
+       else
+	  if tonumber(level) <= 20 then
+	     widget:set_text("🔈 " .. level .. "% ")
+	  elseif tonumber(level) <= 50 then
+	     widget:set_text("🔉 " .. level .. "% ")
+	  else
+	     widget:set_text("🔊 " .. level .. "% ")
+	  end
+       end
+    end)
+
+
+
+-- MEM
+local mem = awful.widget.watch(shell .. " -c \"free -m | awk '/^Mem/ {print \\$4}'\"", 5,
+    function(widget, output)
+       free = tonumber(output) / 1000
+       if free >= 0.3 then
+	  widget:set_markup(" " .. string.format("%.0f", free)  .. " GB ")
+       else
+	  widget:set_markup(markup(theme.waring, " " .. string.format("%.0f", free)  .. " GB "))
+       end
+    end)
+
+-- CPU
+local cpu = awful.widget.watch(shell .. " -c \"grep 'cpu' /proc/stat | awk '{usage=(\\$2+\\$4)*100/(\\$2+\\$4+\\$5)} END {print usage}'\"", 5,
+function(widget, output)
+       free = tonumber(output)
+       if free <= 80 then
+	  widget:set_markup(" " .. string.format("%.0f", free)  .. "% ")
+       else
+	widget:set_markup(markup(theme.waring, " " .. string.format("%.0f", free)  .. "% "))
+       end
+    end)
+
+cpu:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(top) end)))
+
+local temp = awful.widget.watch(shell .. " -c \"sensors | awk '/Package/ {printf \\$4}'\"", 5,
+function(widget, output)
+       a = output:gsub('[\n,°C,+]', '')
+       temp = tonumber(a)
+
+       if temp <= 80 then
+	  widget:set_markup(" " .. string.format("%.0f", temp) .. "°C ")
+       else
+	  widget:set_markup(markup(theme.waring, " " .. string.format("%.0f", temp)  .. "°C "))
+       end
+end)
+
+-- Battery
+local bat = awful.widget.watch(shell .. " -c \"acpi -b | awk  \' {print \\$3 \\$4 \\$5}\'\"", 10,
+    function(widget, output)
+       ac = output:match('(%a+)')
+       percent = output:match("%d+")
+       remaining = ""
+       if ac == "Discharging" then
+          remaining = output:match("%d+:%d+")
+	  if tonumber(percent) > 20 then
+	     widget:set_text(" 🔋 " .. percent .. "% / " .. remaining)
+	  else
+	     widget:set_markup(markup(theme.waring, "🔋" .. percent .. "% / " .. remaining .. " "))
+	     if tonumber(percent) < 10 then
+		naughty.notify({
+		   preset = naughty.config.presets.critical,
+		   title = "Battery critically low!",
+		   text = (" 🔋 " .. percent .. "% / " .. remaining)
+		})
+	     else
+		naughty.notify({
+		   preset = naughty.config.presets.normal,
+		   title = "Battery low!",
+		   text = (" 🔋 " .. percent .. "% / " .. remaining)
+		})
+	     end
+	  end
+       else
+	  widget:set_text(" 🔌 ")
+       end
+    end)
 
 awful.util.taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
     awful.button({ modkey }, 1, function(t)
@@ -691,75 +656,61 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- ALSA volume control
     awful.key({ modkey }, "Up",
         function()
-            os.execute(string.format("%s set %s 1%%+", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1%%+", volume_cmd, volume_channel))
         end),
     awful.key({}, "XF86AudioRaiseVolume",
         function()
-            os.execute(string.format("%s set %s 1%%+", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1%%+", volume_cmd, volume_channel))
         end),
     awful.key({ modkey }, "Down",
         function()
-            os.execute(string.format("%s set %s 1%%-", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1%%-", volume_cmd, volume_channel))
         end),
     awful.key({}, "XF86AudioLowerVolume",
         function()
-            os.execute(string.format("%s set %s 1%%-", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1%%-", volume_cmd, volume_channel))
         end),
     awful.key({ modkey }, "m",
         function()
-            os.execute(string.format("%s set %s 1+ toggle", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1+ toggle", volume_cmd, volume_channel))
         end),
     awful.key({}, "XF86AudioMute",
         function()
-            os.execute(string.format("%s set %s 1+ toggle", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 1+ toggle", volume_cmd, volume_channel))
         end),
     awful.key({ modkey }, "XF86AudioRaiseVolume",
         function()
-            os.execute(string.format("%s set %s 100%%", volume.cmd, volume.channel))
-            volume.update()
+            os.execute(string.format("%s set %s 100%%", volume_cmd, volume_channel))
         end),
 
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
         function()
-            awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-            theme.mpd.update()
+            awful.util.spawn_with_shell(toggle_mpd_command)
         end),
     awful.key({}, "XF86AudioPlay",
         function()
-            awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-            theme.mpd.update()
+            awful.util.spawn_with_shell(toggle_mpd_command)
         end),
     awful.key({ altkey, "Control" }, "Down",
         function()
             awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
-            theme.mpd.update()
         end),
     awful.key({ altkey, "Control" }, "Left",
         function()
             awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-            theme.mpd.update()
         end),
     awful.key({}, "XF86AudioPrev",
         function()
             awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-            theme.mpd.update()
         end),
     awful.key({ altkey, "Control" }, "Right",
         function()
             awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-            theme.mpd.update()
         end),
     awful.key({}, "XF86AudioNext",
         function()
             awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-            theme.mpd.update()
         end),
 
     -- Brightness
@@ -778,19 +729,18 @@ globalkeys = awful.util.table.join(-- Controling Awesome
 	  local semicolon = ";"
 	  local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. toggle_master_command .. semicolon
 
-	  if mpd_now.state == "play" then
-	     awful.util.spawn_with_shell(toggle_mpd_command)
-	     theme.mpd.update()
-	     lock_command = lock_command .. toggle_mpd_command .. semicolon
-	  end
-	  
+--	  if mpd_now.state == "play" then
+--	     awful.util.spawn_with_shell(toggle_mpd_command)
+--	     theme.mpd.update()
+--	     lock_command = lock_command .. toggle_mpd_command .. semicolon
+--	  end
+--	  
 	  if volume_now.status ~= "off" then
 	     os.execute(toggle_master_command)
 	  end
 	  os.execute(lock_command)
     end),
     awful.key({ modkey }, "w", function() awful.util.spawn(browser) end),
-    awful.key({ modkey, "Shift" }, "w", function() awful.util.spawn(browser_work) end),
     awful.key({ modkey, "Control" }, "w", function() awful.util.spawn(browser_incognito) end),
     awful.key({ modkey }, "i", function() awful.util.spawn(browser2) end),
     awful.key({ modkey, "Control" }, "i", function() awful.util.spawn(browser2_incognito) end),

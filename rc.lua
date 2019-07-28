@@ -65,6 +65,7 @@ shell = "bash"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
 toggle_mpd_command = "mpc toggle || ncmpc toggle"
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
+get_new_email_count = shell .. " -c 'find " .. os.getenv("HOME") .. "/.local/share/mail/*/*/new -type f | wc -l'"
 
 -- user defined
 browser = "firefox"
@@ -76,6 +77,7 @@ gui_editor = "emacsclient -nc"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
+email_client =  terminal .. " -e neomutt"
 calculator = "gnome-calculator"
 screenshot = "flameshot gui"
 
@@ -338,6 +340,12 @@ local vpn = awful.widget.watch(get_current_vpn_connection_name, 10,
     end)
 
 
+-- New email count
+local mail = awful.widget.watch(get_new_email_count, 10,
+    function(widget, output)
+       widget:set_text(" 📬 " .. string.gsub(output, '\n$', ' '))
+    end)
+mail:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(email_client) end)))
 
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
@@ -895,6 +903,10 @@ if screen.count() == 3 then
             rule = { class = "Thunderbird" },
             properties = { tag = screen[3].tags[3], switchtotag = true }
         },
+	{
+            rule = { class = "neomutt" },
+            properties = { tag = screen[3].tags[3], switchtotag = true }
+        },
         {
             rule = { class = "Skype" },
             properties = { tag = screen[2].tags[1] }
@@ -934,6 +946,10 @@ elseif screen.count() == 2 then
         },
 	{
             rule = { class = "Thunderbird" },
+            properties = { tag = screen[1].tags[3], switchtotag = true }
+        },
+	{
+            rule = { class = "neomutt" },
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
@@ -994,6 +1010,10 @@ else
         },
 	{
             rule = { class = "Thunderbird" },
+            properties = { tag = screen[1].tags[3], switchtotag = true }
+        },
+	{
+            rule = { class = "neomutt" },
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {

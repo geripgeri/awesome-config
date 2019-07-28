@@ -181,8 +181,7 @@ lain.layout.cascade.tile.ncol = 2
 
 
 local function set_wallpaper(screen)
-    local wallpappers = { theme.wallpaper_c, theme.wallpaper_l, theme.wallpaper_r }
-    gears.wallpaper.maximized(wallpappers[screen], screen, true)
+    gears.wallpaper.maximized(theme.wallpapers[screen], screen, true)
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)

@@ -39,9 +39,6 @@ theme.tasklist_maximized_vertical = ""
 themes_dir = os.getenv("HOME") .. "/.config/awesome/theme"
 png = ".png"
 
-theme.wallpaper_l = themes_dir .. "/wall_l" .. png
-theme.wallpaper_c = themes_dir .. "/wall_c" .. png
-theme.wallpaper_r = themes_dir .. "/wall_r" .. png
-
+theme.wallpapers = { themes_dir .. "/wall_l" .. png, themes_dir .. "/wall_c" .. png, themes_dir .. "/wall_r" .. png}
 
 return theme

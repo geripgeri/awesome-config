@@ -7,7 +7,8 @@
 
 theme = {}
 
-theme.font = "Terminus 9"
+theme.font = "Noto 9"
+theme.taglist_font = "Noto Emoji 11"
 theme.fg_normal = "#CCD0C4"
 theme.fg_focus = "#55FF00"
 theme.bg_normal = "#002B36"
@@ -38,37 +39,9 @@ theme.tasklist_maximized_vertical = ""
 themes_dir = os.getenv("HOME") .. "/.config/awesome/theme"
 png = ".png"
 
-local function get_icon(dir_name, file_name)
-   return themes_dir .. "/icons/" .. dir_name .. "/1x_web/ic_" .. file_name .. "_white_36dp" .. png
-end
-
 theme.wallpaper_l = themes_dir .. "/wall_l" .. png
 theme.wallpaper_c = themes_dir .. "/wall_c" .. png
 theme.wallpaper_r = themes_dir .. "/wall_r" .. png
 
-theme.widget_ac = get_icon("device", "battery_charging_full")
-theme.widget_battery = get_icon("device", "battery_full")
-theme.widget_battery_low = get_icon("device", "battery_20")
-theme.widget_battery_empty = get_icon("device", "battery_alert")
-theme.widget_mem = get_icon("hardware", "memory")
-theme.widget_cpu = get_icon("device", "data_usage")
-theme.widget_temp = get_icon("hardware", "toys")
-theme.widget_music = get_icon("image", "music_note")
-theme.widget_music_on = theme.widget_music
-theme.widget_vol = get_icon("av", "volume_up")
-theme.widget_vol_low = get_icon("av", "volume_down")
-theme.widget_vol_no = get_icon("av", "volume_mute")
-theme.widget_vol_mute = get_icon("av", "volume_off")
-theme.widget_rs_on = get_icon("action", "visibility")
-theme.widget_rs_off = get_icon("action", "visibility_off")
-theme.widget_vpn_on = get_icon("action", "lock")
-theme.widget_vpn_off = get_icon("action", "lock_open")
-
-theme.tag_icon_browser = get_icon("social", "public")
-theme.tag_icon_ide = get_icon("action", "code")
-theme.tag_icon_editor = get_icon("action", "build")
-theme.tag_icon_im = get_icon("action", "question_answer")
-theme.tag_icon_file_manager = get_icon("file", "folder")
-theme.tag_icon_mail = get_icon("communication", "mail_outline")
 
 return theme

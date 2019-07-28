@@ -95,22 +95,23 @@ layouts = {
 }
 awful.layout.layouts = layouts
 
+tag_web = "🌐"
+tag_editor = "🔧"
+tag_mail =  "📩"
+tag_im =  "💬"
 
 local tags = {
     {
-        names = { "www", "editor", "mail", "im" },
-        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] },
-        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail, theme.tag_icon_im }
+        names = { tag_web, tag_editor, tag_mail, tag_im },
+        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] }
     },
     {
-        names = { "im", "files" },
-        layouts = { layouts[2], layouts[2] },
-        icons = { theme.tag_icon_im, theme.tag_icon_file_manager }
+        names = { tag_im, tag_editor },
+        layouts = { layouts[2], layouts[2] }
     },
     {
-        names = { "www", "editor", "mail" },
-        layouts = { layouts[3], layouts[3], layouts[3] },
-        icons = { theme.tag_icon_browser, theme.tag_icon_editor, theme.tag_icon_mail }
+        names = { tag_web, tag_editor, tag_mail },
+        layouts = { layouts[3], layouts[3], layouts[3] }
     }
 }
 
@@ -458,11 +459,6 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Tags
     current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
-
-    for i, t in ipairs(current_tags) do
-       awful.tag.seticon(tags[s.index].icons[i], t)
-       awful.tag.setproperty(t, "icon_only", 1)
-    end
 
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {

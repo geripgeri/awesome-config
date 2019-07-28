@@ -76,6 +76,7 @@ file_namager = "nautilus"
 gui_editor = "emacsclient -nc"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
+rss_reader = terminal .. " -e newsboat"
 top = terminal .. " -e top"
 email_client =  terminal .. " -e neomutt"
 calculator = "gnome-calculator"
@@ -801,6 +802,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    
+    awful.key({ altkey }, "n", function() awful.util.spawn(rss_reader) end),
 
     -- Prompt
     awful.key({ modkey }, "r", function() awful.screen.focused().mypromptbox:run() end),

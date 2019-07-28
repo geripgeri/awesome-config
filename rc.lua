@@ -404,16 +404,12 @@ function generate_right_section(widgets)
    table.insert(ret, arrl_ld)
    
    for i,v in ipairs(widgets) do
-      if i % 4 == 1 or i % 4 == 2 then
+      if i % 2 == 1 then
 	 table.insert(ret, wibox.container.background(v, theme.bg_focus))
-	 if i % 4  == 2 then
-	    table.insert(ret, arrl_dl)
-	 end
+	 table.insert(ret, arrl_dl)
       else
 	 table.insert(ret, v)
-	 if i % 4 == 0 then
-	    table.insert(ret, arrl_ld)
-	 end
+	 table.insert(ret, arrl_ld)
       end
    end
 
@@ -523,7 +519,7 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
 	-- Right widgets
 	
-	generate_right_section({ vpnicon, vpn, myredshift, empytwidget, mpdicon, theme.mpd.widget, volicon, volume.widget, memicon, mem.widget, cpuicon, cpu.widget, tempicon, temp.widget, baticon, bat.widget, date, clock }),
+	generate_right_section({ vpn, mail, mpd, volume, mem,  cpu, temp, bat, date }),
     }
 
     -- Quake application

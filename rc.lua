@@ -49,8 +49,7 @@ local function run_once(cmd)
 end
 
 run_once("urxvtd")
-run_once("unclutter -root")
---- run_once("xcompmgr -c")
+run_once("killall -9 redshift; redshift -x")
 -- }}}
 
 -- {{{ Variable definitions
@@ -62,14 +61,13 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/theme/theme.lua")
 modkey = "Mod4"
 altkey = "Mod1"
 terminal = "urxvtc" or "xterm"
-shell = "zsh" or "bash"
+shell = "bash"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
-toggle_mpd_command = "mpc toggle || ncmpc toggle || pms toggle"
+toggle_mpd_command = "mpc toggle || ncmpc toggle"
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
 
 -- user defined
 browser = "firefox"
-browser_work = "firefox-aurora"
 browser_incognito = "firefox --private-window"
 browser2 = "chromium"
 browser2_incognito = "chromium --incognito"
@@ -78,9 +76,8 @@ gui_editor = "emacsclient -nc"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 top = terminal .. " -e top"
-xmodmap = "xmodmap ~/.Xmodmap"
 calculator = "gnome-calculator"
-screenshot = "spectacle -g"
+screenshot = "flameshot gui"
 
 -- }}}
 
@@ -764,7 +761,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, altkey }, "Down", function() awful.util.spawn("light -U 10") end),
 
     -- Copy to clipboard
-    awful.key({ modkey }, "c", function() os.execute("xsel -p -o | xsel -i -b") end),
+    awful.key({ modkey }, "c", function()  awful.spawn.with_shell("xsel -p -o | xsel -i -b") end),
 
     -- User programs
     awful.key({ modkey }, "l",
@@ -792,6 +789,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
+    awful.key({}, "Print", function() awful.util.spawn(screenshot) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    

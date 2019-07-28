@@ -598,12 +598,32 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- Panic mode, allways switch to screen 1, tag 2 named 'IDE' ;)
     awful.key({ altkey }, "a",
         function()
-	   awful.tag.viewonly(awful.tag.gettags(1)[2])
-	   if screen.count() > 1 then
-	      awful.tag.viewonly(awful.tag.gettags(2)[2])
+	   awful.tag.find_by_name(screen[1], tag_editor):view_only()
+
+	   if screen.count() == 3 then
+	      awful.tag.find_by_name(screen[1], tag_editor):view_only()
+	      awful.tag.find_by_name(screen[2], tag_im):view_only()
+	      awful.tag.find_by_name(screen[3], tag_editor):view_only()
+	      end
+
+	   for i,c in ipairs(screen[2].tags[1]:clients()) do
+      	      c.hidden = true
+
+	      if c.class == "Skype" or c.class ==  "Slack" then
+		 c.hidden = false
+	      end
+	      
 	   end
         end),
 
+
+    awful.key({ altkey }, "b",
+        function()
+	   for i,c in ipairs(screen[2].tags[1]:clients()) do
+	      c.hidden = false
+	   end
+        end),
+    
     -- Show/Hide Wibox
     awful.key({ modkey }, "b", function ()
 	  toggle_wibox()

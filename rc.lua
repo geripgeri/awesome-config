@@ -872,20 +872,26 @@ if screen.count() == 3 then
             properties = { tag = screen[3].tags[3], switchtotag = true }
         },
 	{
-            rule = { class = "neomutt" },
+            rule = { name = "neomutt" },
             properties = { tag = screen[3].tags[3], switchtotag = true }
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.top_right,
+			   honor_workarea = true  }
         },
         {
             rule = { class = "Telegram" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.bottom_right,
+			   honor_workarea = true  }
         },
         {
             rule = { class = "Slack" },
-            properties = { tag = screen[2].tags[1] }
+            properties = { tag = screen[2].tags[1],
+			   placement = awful.placement.top_left,
+			   honor_workarea = true }
         },
         {
             rule = { class = "Emacs" },
@@ -894,8 +900,15 @@ if screen.count() == 3 then
         {
             rule = { class = "Firefox" },
             properties = { tag = screen[1].tags[1], switchtotag = true }
-        }  
-
+        },
+        {
+            rule = { class = "Prusa-slicer" },
+            properties = { tag = screen[2].tags[3], switchtotag = true }
+        },
+	{
+            rule = { class = "FreeCAD" },
+            properties = { tag = screen[1].tags[3], switchtotag = true }
+        }
     }
 elseif screen.count() == 2 then
     awful.rules.rules = {
@@ -917,7 +930,7 @@ elseif screen.count() == 2 then
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
 	{
-            rule = { class = "neomutt" },
+            rule = { name = "neomutt" },
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
@@ -981,12 +994,13 @@ else
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
 	{
-            rule = { class = "neomutt" },
+            rule = { name = "neomutt" }, 
             properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
-            rule = { class = "Firefox" },
-            properties = { tag = screen[1].tags[1], switchtotag = true }
+	   rule = { class = "Firefox" },
+	   except = { instance = "Navigator" },
+	   properties = { tag = screen[1].tags[1], switchtotag = true }
         },
 	{
             rule = { class = "Gimp", role = "gimp-image-window-1" },

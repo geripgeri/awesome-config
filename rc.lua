@@ -590,11 +590,11 @@ globalkeys = awful.util.table.join(-- Controling Awesome
             awful.client.focus.bydirection("left")
             if client.focus then client.focus:raise() end
         end),
-    --    awful.key({ modkey }, "l",
-    --        function()
-    --            awful.client.focus.bydirection("right")
-    --            if client.focus then client.focus:raise() end
-    --        end),
+    awful.key({ modkey }, "l",
+       function()
+	  awful.client.focus.bydirection("right")
+	  if client.focus then client.focus:raise() end
+       end),
 
     -- Panic mode, allways switch to screen 1, tag 2 named 'IDE' ;)
     awful.key({ altkey }, "a",
@@ -741,7 +741,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "c", function()  awful.spawn.with_shell("xsel -p -o | xsel -i -b") end),
 
     -- User programs
-    awful.key({ modkey }, "l",
+    awful.key({  "Control", "Shift" }, "Escape",
        function()
 	  local semicolon = ";"
 	  local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. toggle_master_command .. semicolon

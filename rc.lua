@@ -64,7 +64,7 @@ shell = "bash"
 volume_cmd = "amixer"
 volume_channel = "Master"
 toggle_master_command = "amixer -D pulse set Master 1+ toggle"
-toggle_mpd_command = "mpc toggle || ncmpc toggle"
+mpc = "mpc"
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
 get_new_email_count = shell .. " -c 'find " .. os.getenv("HOME") .. "/.local/share/mail/*/*/new -type f | wc -l'"
 
@@ -217,7 +217,7 @@ local date = awful.widget.watch("date +'%m.%d (%a) %R'", 5,
     end)
 
 -- MPD
-local mpd = awful.widget.watch(shell .. " -c \"mpc status | grep playing | wc -l\"", 5,
+local mpd = awful.widget.watch(shell .. " -c \""string.format("%s status", mpc) .. " | grep playing | wc -l\"", 5,
     function(widget, output)
        playing = (tonumber(output) or 1)
        if playing == 1 then
@@ -703,31 +703,31 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
         function()
-            awful.util.spawn_with_shell(toggle_mpd_command)
+            awful.util.spawn_with_shell(string.format("%s toggle", mpc))
         end),
     awful.key({}, "XF86AudioPlay",
         function()
-            awful.util.spawn_with_shell(toggle_mpd_command)
+            awful.util.spawn_with_shell(string.format("%s toggle", mpc))
         end),
     awful.key({ altkey, "Control" }, "Down",
         function()
-            awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
+            awful.util.spawn_with_shell(string.format("%s stop", mpc))
         end),
     awful.key({ altkey, "Control" }, "Left",
         function()
-            awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
+            awful.util.spawn_with_shell(string.format("%s prev", mpc))
         end),
     awful.key({}, "XF86AudioPrev",
         function()
-            awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
+            awful.util.spawn_with_shell(string.format("%s prev", mpc))
         end),
     awful.key({ altkey, "Control" }, "Right",
         function()
-            awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
+            awful.util.spawn_with_shell(string.format("%s next", mpc))
         end),
     awful.key({}, "XF86AudioNext",
         function()
-            awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
+            awful.util.spawn_with_shell(string.format("%s next", mpc))
         end),
 
     -- Brightness

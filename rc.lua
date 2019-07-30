@@ -63,7 +63,7 @@ terminal = "urxvtc" or "xterm"
 shell = "bash"
 volume_cmd = "amixer"
 volume_channel = "Master"
-toggle_master_command = "amixer -D pulse set Master 1+ toggle"
+toggle_master_command = string.format("%s set %s 1+ toggle", volume_cmd, volume_channel)
 mpc = "mpc"
 get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
 get_new_email_count = shell .. " -c 'find " .. os.getenv("HOME") .. "/.local/share/mail/*/*/new -type f | wc -l'"
@@ -217,10 +217,11 @@ local date = awful.widget.watch("date +'%m.%d (%a) %R'", 5,
     end)
 
 -- MPD
-local mpd = awful.widget.watch(shell .. " -c \""string.format("%s status", mpc) .. " | grep playing | wc -l\"", 5,
+mpd_plaing = ""
+local mpd = awful.widget.watch(shell .. " -c \"" .. string.format("%s status", mpc) .. " | grep playing | wc -l\"", 5,
     function(widget, output)
-       playing = (tonumber(output) or 1)
-       if playing == 1 then
+       mpd_plaing = (tonumber(output) or 1)
+       if mpd_plaing == 1 then
 	  widget:set_markup(" 🎵 ")
        else
 	  widget:set_markup(" ⏸ ")
@@ -247,24 +248,24 @@ local mail = awful.widget.watch(get_new_email_count, 10,
 mail:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(email_client) end)))
 
 -- ALSA volume
-local volume = awful.widget.watch(shell .. " -c 'amixer get Master'", 5,
+volume_status = ""
+volume_level = ""
+local volume = awful.widget.watch(shell .. " -c '" .. string.format("%s get %s", volume_cmd, volume_channel) .. "'", 5,
     function(widget, output)
-       local level, status = string.match(output, "([%d]+)%%.*%[([%l]*)")
+       volume_level, volume_status = string.match(output, "([%d]+)%%.*%[([%l]*)")
        
-       if status == "off" then
-	  widget:set_markup(markup(theme.waring, "🔇 " .. level .. "% "))
+       if volume_status == "off" then
+	  widget:set_markup(markup(theme.waring, " 🔇 " .. volume_level .. "% "))
        else
-	  if tonumber(level) <= 20 then
-	     widget:set_text("🔈 " .. level .. "% ")
-	  elseif tonumber(level) <= 50 then
-	     widget:set_text("🔉 " .. level .. "% ")
+	  if tonumber(volume_level) <= 20 then
+	     widget:set_text(" 🔈 " .. volume_level .. "% ")
+	  elseif tonumber(volume_level) <= 50 then
+	     widget:set_text(" 🔉 " .. volume_level .. "% ")
 	  else
-	     widget:set_text("🔊 " .. level .. "% ")
+	     widget:set_text(" 🔊 " .. volume_level .. "% ")
 	  end
        end
     end)
-
-
 
 -- MEM
 local mem = awful.widget.watch(shell .. " -c \"free -m | awk '/^Mem/ {print \\$4}'\"", 5,
@@ -744,15 +745,14 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({  "Control", "Shift" }, "Escape",
        function()
 	  local semicolon = ";"
-	  local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. toggle_master_command .. semicolon
+	  local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. string.format("%s set %s 1+ toggle", volume_cmd, volume_channel) .. semicolon
 
---	  if mpd_now.state == "play" then
---	     awful.util.spawn_with_shell(toggle_mpd_command)
---	     theme.mpd.update()
---	     lock_command = lock_command .. toggle_mpd_command .. semicolon
---	  end
---	  
-	  if volume_now.status ~= "off" then
+	  if mpd_plaing == 1 then
+	     awful.util.spawn_with_shell(string.format("%s toggle", mpc))
+	     lock_command = lock_command .. string.format("%s toggle", mpc) .. semicolon
+	  end
+	  
+	  if volume_status ~= "off" then
 	     os.execute(toggle_master_command)
 	  end
 	  os.execute(lock_command)

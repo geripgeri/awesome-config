@@ -517,10 +517,10 @@ awful.screen.connect_for_each_screen(function(s)
 	    s.mypromptbox,
 	    s.mytaglist,
         },
-        s.mytasklist, -- Middle widget
+	-- Middle widget
+        s.mytasklist, 
 	-- Right widgets
-	
-	generate_right_section({ vpn, mail, mpd, volume, mem,  cpu, temp, bat, date }),
+	generate_right_section({ vpn, mail, mpd, volume, mem, cpu, temp, bat, date }),
     }
 
     -- Quake application

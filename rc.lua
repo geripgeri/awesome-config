@@ -318,7 +318,8 @@ local bat = awful.widget.watch(shell .. " -c \"acpi -b | awk  \' {print \\$3 \\$
 		naughty.notify({
 		   preset = naughty.config.presets.critical,
 		   title = "Battery critically low!",
-		   text = (" 🔋 " .. percent .. "% / " .. remaining)
+		   text = (" 🔋 " .. percent .. "% / " .. remaining),
+		   timeout = 10
 		})
 	     else
 		naughty.notify({

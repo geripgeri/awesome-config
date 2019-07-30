@@ -100,6 +100,7 @@ tag_web = "🌐"
 tag_editor = "🔧"
 tag_mail =  "📩"
 tag_im =  "💬"
+tag_3d = "📐"
 
 local tags = {
     {
@@ -107,8 +108,8 @@ local tags = {
         layouts = { layouts[2], layouts[2], layouts[2], layouts[2] }
     },
     {
-        names = { tag_im, tag_editor },
-        layouts = { layouts[2], layouts[2] }
+        names = { tag_im, tag_editor, tag_3d },
+        layouts = { layouts[2], layouts[2], layouts[2] }
     },
     {
         names = { tag_web, tag_editor, tag_mail },

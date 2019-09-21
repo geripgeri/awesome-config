@@ -304,13 +304,12 @@ function(widget, output)
 end)
 
 -- Battery
-local bat = awful.widget.watch(shell .. " -c \"acpi -b | awk  \' {print \\$3 \\$4 \\$5}\'\"", 10,
+local bat = awful.widget.watch(shell .. " -c \"acpi -ab | awk  \'/harging|line/ {print \\$3 \\$4 \\$5}\'\"", 10,
     function(widget, output)
        ac = output:match('(%a+)')
        percent = output:match("%d+")
-       remaining = ""
+       remaining = output:match("%d+:%d+")
        if ac == "Discharging" then
-          remaining = output:match("%d+:%d+")
 	  if tonumber(percent) > 20 then
 	     widget:set_text(" 🔋 " .. percent .. "% / " .. remaining)
 	  else

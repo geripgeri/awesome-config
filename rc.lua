@@ -208,7 +208,6 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- {{{ Wibox
 local markup = lain.util.markup
-local separators = lain.util.separators
 
 -- Textclock
 local date = awful.widget.watch("date +'%m.%d (%a) %R'", 5,
@@ -395,22 +394,34 @@ lain.layout.cascade.tile.nmaster = 5
 lain.layout.cascade.tile.ncol = 2
 
 -- Separators
-local arrl_dl = separators.arrow_left(theme.bg_focus, "alpha")
-local arrl_ld = separators.arrow_left("alpha", theme.bg_focus)
+local separator_a = wibox.widget {
+   widget = wibox.widget.separator,
+    shape  = function(cr, width, height)
+       gears.shape.transform(gears.shape.rectangular_tag) : translate(0, 0) (cr,  width, height,  10)
+    end,
+    forced_width = 10,
+    color = theme.bg_focus
+}
+
+local separator_b = wibox.widget {
+   widget = wibox.widget.separator,
+    shape  = function(cr, width, height)
+       gears.shape.transform(gears.shape.rectangular_tag):rotate_at(width/2,height/2,math.pi) (cr,  width, height,-10)
+    end,
+    forced_width = 10,
+    color =  theme.bg_focus
+}
 
 function generate_right_section(widgets)
    local ret = { layout = wibox.layout.fixed.horizontal }
-
-   table.insert(ret, wibox.widget.systray())
-   table.insert(ret, arrl_ld)
    
    for i,v in ipairs(widgets) do
-      if i % 2 == 1 then
+      if i % 2 == 0 then
 	 table.insert(ret, wibox.container.background(v, theme.bg_focus))
-	 table.insert(ret, arrl_dl)
+	 table.insert(ret, separator_b)
       else
 	 table.insert(ret, v)
-	 table.insert(ret, arrl_ld)
+	 table.insert(ret, separator_a)
       end
    end
 
@@ -520,11 +531,11 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Middle widget
         s.mytasklist, 
 	-- Right widgets
-	generate_right_section({ vpn, mail, mpd, volume, mem, cpu, temp, bat, date }),
+	generate_right_section({ wibox.widget.systray(), vpn, mail, mpd, volume, mem, cpu, temp, bat, date }),
     }
 
     -- Quake application
-    s.quake = lain.util.quake({ app = terminal })
+--    s.quake = lain.util.quake({ app = terminal })
 end)
 
 function toggle_wibox()
@@ -665,7 +676,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, }, "Return", function() awful.util.spawn(terminal) end),
 
     -- Drop down terminal
-    awful.key({ modkey, }, "z", function() awful.screen.focused().quake:toggle() end),
+--    awful.key({ modkey, }, "z", function() awful.screen.focused().quake:toggle() end),
 
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end),

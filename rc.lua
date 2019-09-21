@@ -65,7 +65,7 @@ volume_cmd = "amixer"
 volume_channel = "Master"
 toggle_master_command = string.format("%s set %s 1+ toggle", volume_cmd, volume_channel)
 mpc = "mpc"
-get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn/ && \\$3 ~ /activated/ {print \\$1}'\""
+get_current_vpn_connection_name = shell .. " -c \"nmcli -g NAME,TYPE,STATE connection | awk -F: '\\$2 ~ /vpn|wireguard/ && \\$3 ~ /activated/ {print \\$1}'\""
 get_new_email_count = shell .. " -c 'find " .. os.getenv("HOME") .. "/.local/share/mail/*/*/new -type f | wc -l'"
 
 -- user defined

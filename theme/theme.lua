@@ -9,9 +9,9 @@ theme = {}
 
 theme.font = "Noto 9"
 theme.taglist_font = "Noto Emoji 11"
-theme.fg_normal = "#CCD0C4"
+theme.fg_normal = "#EBDBB2"
 theme.fg_focus = "#55FF00"
-theme.bg_normal = "#002B36"
+theme.bg_normal = "#282828"
 theme.bg_focus = "#405D27"
 theme.border_focus = "#7F7F7F"
 theme.border_marked = "#CC9393"

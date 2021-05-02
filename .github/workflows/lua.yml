@@ -1,0 +1,24 @@
+name: Lua CI
+
+on:
+  push:
+    branches:
+      - master
+      - release/*
+  pull_request:
+    branches:
+      - master
+      - release/*
+  schedule:
+    - cron: "0 5 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install awesomewm
+      run: sudo apt install -y awesome 
+    - name: Check configuration
+      run: awesome -k rc.lua

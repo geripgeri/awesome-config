@@ -74,7 +74,7 @@ browser_incognito = "firefox --private-window"
 browser2 = "chromium"
 browser2_incognito = "chromium --incognito"
 file_namager = "nautilus"
-gui_editor = "emacsclient -nc"
+editor = terminal .. " -c nvim"
 graphics = "gimp"
 musicplr = terminal .. " -e ncmpcpp"
 rss_reader = terminal .. " -e newsboat"
@@ -771,7 +771,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey, "Control" }, "w", function() awful.util.spawn(browser_incognito) end),
     awful.key({ modkey }, "i", function() awful.util.spawn(browser2) end),
     awful.key({ modkey, "Control" }, "i", function() awful.util.spawn(browser2_incognito) end),
-    awful.key({ modkey }, "s", function() awful.util.spawn(gui_editor) end),
+    awful.key({ modkey }, "s", function() awful.util.spawn(editor) end),
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
     awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),

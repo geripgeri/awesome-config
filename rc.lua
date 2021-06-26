@@ -37,20 +37,6 @@ do
 end
 -- }}}
 
--- {{{ Autostart windowless processes
-local function run_once(cmd)
-    local findme = cmd
-    local firstspace = cmd:find(" ")
-    if firstspace then
-        findme = cmd:sub(0, firstspace - 1)
-    end
-    awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, cmd))
-end
-
-run_once("urxvtd")
-run_once("killall -9 redshift; redshift -x")
--- }}}
-
 -- {{{ Variable definitions
 
 -- beautiful init
@@ -59,7 +45,7 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/theme/theme.lua")
 -- common
 modkey = "Mod4"
 altkey = "Mod1"
-terminal = "urxvtc" or "xterm"
+terminal = "st -e /bin/zsh --login" or "urxvtc" or "xterm"
 shell = "bash"
 volume_cmd = "amixer"
 volume_channel = "Master"
@@ -76,10 +62,10 @@ browser2_incognito = "chromium --incognito"
 file_namager = "nautilus"
 editor = terminal .. " -c nvim"
 graphics = "gimp"
-musicplr = terminal .. " -e ncmpcpp"
-rss_reader = terminal .. " -e newsboat"
-top = terminal .. " -e top"
-email_client =  terminal .. " -e neomutt"
+musicplr = terminal .. " -c ncmpcpp"
+rss_reader = terminal .. " -c newsboat"
+top = terminal .. " -c top"
+email_client =  terminal .. " -c neomutt"
 calculator = "gnome-calculator"
 screenshot = "flameshot gui"
 
@@ -197,7 +183,7 @@ end)
 
 -- {{{ Fuction for open terminal and stay opens after command returns
 function open_terminal_and_hold(cmd)
-    awful.util.spawn(terminal .. " -e " .. shell .. " -c \"" .. cmd .. " && " .. shell .. "\"")
+    awful.util.spawn(terminal .. " -c " .. shell .. " -c \"" .. cmd .. " && " .. shell .. "\"")
 end
 
 -- }}}

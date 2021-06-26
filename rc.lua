@@ -91,15 +91,15 @@ tag_3d = "📐"
 local tags = {
     {
         names = { tag_web, tag_editor, tag_mail, tag_im },
-        layouts = { layouts[2], layouts[2], layouts[2], layouts[2] }
+        layouts = { layouts[2], layouts[2], layouts[2], layouts[5] }
     },
     {
-        names = { tag_im, tag_editor, tag_3d },
+        names = { tag_web, tag_editor, tag_3d },
         layouts = { layouts[2], layouts[2], layouts[2] }
     },
     {
-        names = { tag_web, tag_editor, tag_mail },
-        layouts = { layouts[3], layouts[3], layouts[3] }
+        names = { tag_im, tag_editor, tag_mail },
+        layouts = { layouts[6], layouts[3], layouts[3] }
     }
 }
 
@@ -422,7 +422,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mypromptbox = awful.widget.prompt()
 
     -- Tags
-    current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts[s.index])
+    current_tags = awful.tag(tags[s.index].names, s, tags[s.index].layouts)
 
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {

@@ -264,7 +264,7 @@ local mem = awful.widget.watch(shell .. " -c \"free -m | awk '/^Mem/ {print \\$4
     end)
 
 -- CPU
-local cpu = awful.widget.watch(shell .. " -c \"grep 'cpu' /proc/stat | awk '{usage=(\\$2+\\$4)*100/(\\$2+\\$4+\\$5)} END {print usage}'\"", 5,
+local cpu = awful.widget.watch(shell .. " -c \"grep 'cpu ' /proc/stat | awk '{usage=(\\$2+\\$4)*100/(\\$2+\\$4+\\$5)} END {print usage}'\"", 5,
 function(widget, output)
        free = tonumber(output)
        if free <= 80 then

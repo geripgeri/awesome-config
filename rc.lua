@@ -878,38 +878,46 @@ if screen.count() == 3 then
                 placement = awful.placement.no_overlap + awful.placement.no_offscreen
             }
         },
-        {
-            rule = { class = "Thunderbird" },
-            properties = { tag = screen[3].tags[3], switchtotag = true }
-        },
 	{
             rule = { name = "neomutt" },
-            properties = { tag = screen[3].tags[3], switchtotag = true }
+            properties = { tag = screen[1].tags[3], switchtotag = true }
         },
         {
             rule = { class = "Skype" },
-            properties = { tag = screen[2].tags[1],
+            properties = { tag = screen[3].tags[1],
+			   placement = awful.placement.top_right,
+			   honor_workarea = true  }
+        },
+	{
+            rule = { class = "Element" },
+            properties = { tag = screen[3].tags[1],
 			   placement = awful.placement.top_right,
 			   honor_workarea = true  }
         },
         {
             rule = { class = "Telegram" },
-            properties = { tag = screen[2].tags[1],
+            properties = { tag = screen[3].tags[1],
+			   placement = awful.placement.bottom_right,
+			   honor_workarea = true  }
+        },
+	{
+            rule = { class = "discord" },
+            properties = { tag = screen[3].tags[1],
 			   placement = awful.placement.bottom_right,
 			   honor_workarea = true  }
         },
         {
             rule = { class = "Slack" },
-            properties = { tag = screen[2].tags[1],
+            properties = { tag = screen[3].tags[1],
 			   placement = awful.placement.top_left,
 			   honor_workarea = true }
         },
         {
             rule = { class = "Emacs" },
-            properties = { tag = screen[3].tags[2], switchtotag = true }
+            properties = { tag = screen[1].tags[2], switchtotag = true }
         },
         {
-            rule = { class = "Firefox" },
+            rule = { class = "firefox" },
             properties = { tag = screen[1].tags[1], switchtotag = true }
         },
         {
@@ -984,17 +992,26 @@ else
                 size_hints_honor = false
             }
         },
+
+	{
+            rule = { class = "Slack" },
+            properties = { tag = screen[1].tags[4], switchtotag = true },
+	    callback = function(c) awful.placement.top_left(c, { honor_workarea = true }) end
+        },
         {
             rule = { class = "Skype" },
-            properties = { tag = screen[1].tags[4] }
+            properties = { tag = screen[1].tags[4] },
+	    callback = function(c) awful.placement.top_right(c, { honor_workarea = true }) end
+        },
+        {
+            rule = { class = "discord" },
+            properties = { tag = screen[1].tags[4], switchtotag = true },
+	    callback = function(c) awful.placement.bottom_left(c, { honor_workarea = true }) end
         },
         {
             rule = { class = "Telegram" },
-            properties = { tag = screen[1].tags[4] }
-        },
-        {
-            rule = { class = "Slack" },
-            properties = { tag = screen[1].tags[4], switchtotag = true }
+            properties = { tag = screen[1].tags[4], switchtotag = true },
+	    callback = function(c) awful.placement.bottom_right(c, { honor_workarea = true }) end
         },
         {
             rule = { class = "Emacs" },
@@ -1013,11 +1030,11 @@ else
 	   except = { instance = "Navigator" },
 	   properties = { tag = screen[1].tags[1], switchtotag = true }
         },
-	{
-            rule = { class = "Gimp", role = "gimp-image-window-1" },
-	    callback = function(c)
-	       lain.widget.contrib.redshift:toggle()
-	end },    
+--	{
+--            rule = { class = "Gimp", role = "gimp-image-window-1" },
+--	    callback = function(c)
+--	       lain.widget.contrib.redshift:toggle()
+--	end },    
 
 	{
             rule = { class = "Kodi" },

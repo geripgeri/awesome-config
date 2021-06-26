@@ -7,8 +7,8 @@
 
 theme = {}
 
-theme.font = "Noto 9"
-theme.taglist_font = "Noto Emoji 11"
+theme.font = "Fira Code 10"
+theme.taglist_font = theme.font
 theme.fg_normal = "#EBDBB2"
 theme.fg_focus = "#55FF00"
 theme.bg_normal = "#282828"

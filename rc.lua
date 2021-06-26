@@ -62,7 +62,7 @@ browser2_incognito = "chromium --incognito"
 file_namager = "nautilus"
 editor = terminal .. " -c nvim"
 graphics = "gimp"
-musicplr = terminal .. " -c ncmpcpp"
+musicplr = "spotify"
 rss_reader = terminal .. " -c newsboat"
 top = terminal .. " -c top"
 email_client =  terminal .. " -c neomutt"
@@ -716,7 +716,8 @@ globalkeys = awful.util.table.join(-- Controling Awesome
         end),
     awful.key({}, "XF86AudioPlay",
         function()
-            awful.util.spawn_with_shell(string.format("%s toggle", mpc))
+            -- Spotify Play / Pause
+            awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
         end),
     awful.key({ altkey, "Control" }, "Down",
         function()
@@ -728,7 +729,8 @@ globalkeys = awful.util.table.join(-- Controling Awesome
         end),
     awful.key({}, "XF86AudioPrev",
         function()
-            awful.util.spawn_with_shell(string.format("%s prev", mpc))
+            -- Spotify Previous
+            awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous")
         end),
     awful.key({ altkey, "Control" }, "Right",
         function()
@@ -736,7 +738,8 @@ globalkeys = awful.util.table.join(-- Controling Awesome
         end),
     awful.key({}, "XF86AudioNext",
         function()
-            awful.util.spawn_with_shell(string.format("%s next", mpc))
+            -- Spotify Next
+            awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next")
         end),
 
     -- Brightness

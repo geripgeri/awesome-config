@@ -67,7 +67,7 @@ rss_reader = terminal .. " -c newsboat"
 top = terminal .. " -c top"
 email_client =  terminal .. " -c neomutt"
 calculator = "gnome-calculator"
-screenshot = "flameshot gui"
+screenshot = "maim -s | xclip -selection clipboard -t image/png"
 
 -- }}}
 
@@ -760,8 +760,7 @@ globalkeys = awful.util.table.join(-- Controling Awesome
     awful.key({ modkey }, "s", function() awful.util.spawn(editor) end),
     awful.key({ modkey }, "g", function() awful.util.spawn(graphics) end),
     awful.key({ modkey }, "e", function() awful.util.spawn(file_namager) end),
-    awful.key({ altkey }, "p", function() awful.util.spawn(screenshot) end),
-    awful.key({}, "Print", function() awful.util.spawn(screenshot) end),
+    awful.key({}, "Print", function() awful.util.spawn_with_shell(screenshot) end),
     awful.key({ modkey, "Shift" }, "t", function() lain.widget.contrib.redshift:toggle() end),
     awful.key({}, "XF86Calculator", function() awful.util.spawn(calculator) end),
     awful.key({modkey}, "XF86AudioPlay", function() awful.util.spawn(musicplr) end),    

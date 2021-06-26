@@ -196,7 +196,19 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 local markup = lain.util.markup
 
 -- Textclock
-local date = awful.widget.watch("date +'%m.%d (%a) %R'", 5,
+local date = awful.widget.watch("date +'%m.%d (%a)'", 5,
+    function(widget, output)
+        widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
+    end)
+
+-- Time in Bucharest
+local time_in_bucharest = awful.widget.watch(shell .. " -c \"" .. "TZ=Europe/Bucharest date +'%R %Z '\"", 5,
+    function(widget, output)
+        widget:set_markup(" " .. output)
+    end)
+
+-- Local time
+local time = awful.widget.watch("date +'%R'", 5,
     function(widget, output)
         widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
     end)
@@ -517,7 +529,7 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Middle widget
         s.mytasklist, 
 	-- Right widgets
-	generate_right_section({ wibox.widget.systray(), vpn, mail, mpd, volume, mem, cpu, temp, bat, date }),
+	generate_right_section({ wibox.widget.systray(), vpn, mail, mpd, volume, mem, cpu, temp, bat, date, time_in_bucharest, time }),
     }
 
     -- Quake application

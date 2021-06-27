@@ -415,16 +415,17 @@ function generate_right_section(widgets)
 
     for i,v in ipairs(widgets) do
         if i % 2 == 0 then
-            table.insert(ret, wibox.container.background(v, theme.bg_focus))
+            table.insert(ret, wibox.container.background(wibox.container.margin(v,0,0,2), theme.bg_focus))
+            
             table.insert(ret, separator_b)
         else
-            table.insert(ret, v)
+            table.insert(ret, wibox.container.margin(v,0,0,2))
             table.insert(ret, separator_a)
         end
     end
 
     table.remove(ret,table.getn(ret))
-    return ret
+    return ret 
 end
 
 awful.screen.connect_for_each_screen(function(s)
@@ -471,6 +472,7 @@ awful.screen.connect_for_each_screen(function(s)
                 },
                 left  = 12,
                 right = 12,
+                top = theme.awful_wibar_align_top,
                 widget = wibox.container.margin
             },
             id     = 'background_role',
@@ -503,6 +505,7 @@ awful.screen.connect_for_each_screen(function(s)
                     },
                     left  = 15,
                     right = 0,
+                    top = theme.awful_wibar_align_top,
                     widget = wibox.container.margin
                 },
                 id     = 'background_role',

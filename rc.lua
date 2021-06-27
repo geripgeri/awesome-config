@@ -520,6 +520,13 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = theme.awful_wibar_position, screen = s, height = theme.awful_wibar_height, bg = theme.bg_normal, fg = theme.fg_normal })
 
+
+    if s.index == 1 then
+        right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, date, time_in_bucharest, time })
+    else
+        right_widgets = nil
+    end
+
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
@@ -532,7 +539,7 @@ awful.screen.connect_for_each_screen(function(s)
         -- Middle widget
         s.mytasklist, 
         -- Right widgets
-        generate_right_section({ wibox.widget.systray(), vpn, mail, mpd, volume, mem, cpu, temp, bat, date, time_in_bucharest, time }),
+        right_widgets,
     }
 
     -- Quake application

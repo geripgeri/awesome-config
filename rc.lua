@@ -196,7 +196,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 local markup = lain.util.markup
 
 -- Textclock
-local date = awful.widget.watch("date +'%m.%d (%a)'", 5,
+local date = awful.widget.watch("date +'%m.%d (%a) '", 5,
 function(widget, output)
     widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
 end)
@@ -204,13 +204,13 @@ end)
 -- Time in Bucharest
 local time_in_bucharest = awful.widget.watch(shell .. " -c \"" .. "TZ=Europe/Bucharest date +'%R %Z '\"", 5,
 function(widget, output)
-    widget:set_markup(" " .. output)
+    widget:set_markup(" " .. output .. " ")
 end)
 
 -- Local time
-local time = awful.widget.watch("date +'%R'", 5,
+local time = awful.widget.watch("date +'%R '", 5,
 function(widget, output)
-    widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
+    widget:set_markup(" " .. markup(theme.taglist_fg_focus, output) )
 end)
 
 -- MPD

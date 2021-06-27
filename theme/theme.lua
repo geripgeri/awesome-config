@@ -27,6 +27,8 @@ theme.textbox_widget_margin_top = 1
 theme.notify_fg = theme.fg_normal
 theme.notify_bg = theme.bg_normal
 theme.notify_border = theme.border_focus
+theme.awful_wibar_align_top = 2
+theme.awful_wibar_position = "top"
 theme.awful_wibar_height = 18
 theme.awful_widget_height = 14
 theme.awful_widget_margin_top = 2
@@ -41,6 +43,6 @@ theme.systray_icon_spacing = 3
 themes_dir = os.getenv("HOME") .. "/.config/awesome/theme"
 png = ".png"
 
-theme.wallpapers = { themes_dir .. "/wall_l" .. png, themes_dir .. "/wall_c" .. png, themes_dir .. "/wall_r" .. png}
+theme.wallpapers = { themes_dir .. "/wall_l" .. png, themes_dir .. "/wall_c" .. png, themes_dir .. "/wall_r" .. png }
 
 return theme

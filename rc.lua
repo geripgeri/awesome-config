@@ -213,18 +213,18 @@ function(widget, output)
     widget:set_markup(" " .. markup(theme.taglist_fg_focus, output) )
 end)
 
--- MPD
-mpd_plaing = ""
-local mpd = awful.widget.watch(shell .. " -c \"" .. string.format("%s status", mpc) .. " | grep playing | wc -l\"", 5,
+-- Music
+music_plaing = ""
+local music = awful.widget.watch(shell .. " -c \"playerctl --player=" .. musicplr .. " status | grep Playing | wc -l\"", 5,
 function(widget, output)
-    mpd_plaing = (tonumber(output) or 1)
-    if mpd_plaing == 1 then
+    music_plaing = (tonumber(output) or 1)
+    if music_plaing == 1 then
         widget:set_markup(" 🎵 ")
     else
         widget:set_markup(" ⏸ ")
     end
 end)
-mpd:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
+music:buttons(awful.util.table.join(awful.button({}, 1, function() awful.util.spawn_with_shell(musicplr) end)))
 
 
 -- Current VPN Name
@@ -719,37 +719,21 @@ function()
     os.execute(string.format("%s set %s 100%%", volume_cmd, volume_channel))
 end),
 
--- MPD control
-awful.key({ altkey, "Control" }, "Up",
-function()
-    awful.util.spawn_with_shell(string.format("%s toggle", mpc))
-end),
+-- Music control
 awful.key({}, "XF86AudioPlay",
 function()
     -- Spotify Play / Pause
-    awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
-end),
-awful.key({ altkey, "Control" }, "Down",
-function()
-    awful.util.spawn_with_shell(string.format("%s stop", mpc))
-end),
-awful.key({ altkey, "Control" }, "Left",
-function()
-    awful.util.spawn_with_shell(string.format("%s prev", mpc))
+    awful.util.spawn_with_shell("playerctl --player=" .. musicplr .. " play-pause")
 end),
 awful.key({}, "XF86AudioPrev",
 function()
     -- Spotify Previous
-    awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous")
-end),
-awful.key({ altkey, "Control" }, "Right",
-function()
-    awful.util.spawn_with_shell(string.format("%s next", mpc))
+    awful.util.spawn_with_shell("playerctl --player=" .. musicplr .. " previous")
 end),
 awful.key({}, "XF86AudioNext",
 function()
     -- Spotify Next
-    awful.util.spawn_with_shell("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next")
+    awful.util.spawn_with_shell("playerctl --player=" .. musicplr .. " next")
 end),
 
 -- Brightness
@@ -768,9 +752,8 @@ function()
     local semicolon = ";"
     local lock_command = "i3lock -e -f -n -c " .. string.sub(theme.bg_normal, 2) .. semicolon .. string.format("%s set %s 1+ toggle", volume_cmd, volume_channel) .. semicolon
 
-    if mpd_plaing == 1 then
-        awful.util.spawn_with_shell(string.format("%s toggle", mpc))
-        lock_command = lock_command .. string.format("%s toggle", mpc) .. semicolon
+    if music_plaing == 1 then
+        awful.util.spawn_with_shell("playerctl --player=" .. musicplr .. " play-pause")
     end
 
     if volume_status ~= "off" then

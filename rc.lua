@@ -524,7 +524,7 @@ awful.screen.connect_for_each_screen(function(s)
     if s.index == 1 then
         right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, date, time_in_bucharest, time })
     else
-        right_widgets = nil
+        right_widgets = generate_right_section({ date, time })
     end
 
     -- Add widgets to the wibox

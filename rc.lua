@@ -72,9 +72,10 @@ screenshot = "maim -s | xclip -selection clipboard -t image/png"
 -- }}}
 
 -- {{{ Tags
-layouts = {
+local layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
+    awful.layout.suit.tile.top,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.right,
     awful.layout.suit.fair,
@@ -82,24 +83,26 @@ layouts = {
 }
 awful.layout.layouts = layouts
 
-tag_web = "🌐"
-tag_editor = "🔧"
-tag_mail =  "📩"
-tag_im =  "💬"
-tag_3d = "📐"
+local tag_web = "🌐"
+local tag_editor = "🔧"
+local tag_mail =  "📩"
+local tag_im =  "💬"
+local tag_3d = "📐"
+local tag_music = "🎵"
+local tag_vpn = "🔐"
 
 local tags = {
     {
-        names = { tag_web, tag_editor, tag_mail, tag_im },
-        layouts = { layouts[2], layouts[2], layouts[2], layouts[5] }
+        names = { tag_web, tag_editor, tag_mail, tag_im, tag_vpn },
+        layouts = { layouts[2], layouts[3], layouts[2], layouts[3], layouts[2] }
     },
     {
         names = { tag_web, tag_editor, tag_3d },
         layouts = { layouts[2], layouts[2], layouts[2] }
     },
     {
-        names = { tag_im, tag_editor, tag_mail },
-        layouts = { layouts[6], layouts[3], layouts[3] }
+        names = { tag_im, tag_music, tag_mail },
+        layouts = { layouts[2], layouts[3], layouts[3] }
     }
 }
 

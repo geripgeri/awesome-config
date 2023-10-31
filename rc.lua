@@ -340,6 +340,38 @@ function(widget, output)
     end
 end)
 
+-- Headset Battery Indicator
+local headset_battery = awful.widget.watch(shell .. " -c \"headsetcontrol -b | tail -n 1 | awk '{print $2}'\"", 5,
+function(widget, output)
+    local alma = output:gsub('\n', '')
+    local percent = alma:match("%d+")
+    local charging = alma:match("Charging")
+
+    if charging ~= "Charging" then
+        if tonumber(percent) > 20 then
+            widget:set_text(percent .. "% ")
+        else
+            widget:set_markup(markup(theme.waring, percent .. "% "))
+            if tonumber(percent) < 10 then
+                naughty.notify({
+                    preset = naughty.config.presets.critical,
+                    title = "Headset battery critically low!",
+                    text = (percent .. "%"),
+                    timeout = 10
+                })
+            else
+                naughty.notify({
+                    preset = naughty.config.presets.normal,
+                    title = "Headset battery low!",
+                    text = (percent .. "%")
+                })
+            end
+        end
+    else
+        widget:set_text(" 🔌 ")
+    end
+end)
+
 awful.util.taglist_buttons = awful.util.table.join(awful.button({}, 1, function(t) t:view_only() end),
 awful.button({ modkey }, 1, function(t)
     if client.focus then
@@ -540,7 +572,7 @@ awful.screen.connect_for_each_screen(function(s)
             right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, date, time })
         end
     else
-        right_widgets = generate_right_section({ date, time })
+        right_widgets = generate_right_section({ date, headset_battery, time })
     end
 
     -- Add widgets to the wibox

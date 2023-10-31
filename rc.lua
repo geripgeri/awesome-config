@@ -201,7 +201,7 @@ local markup = lain.util.markup
 -- Textclock
 local date = awful.widget.watch("date +'%m.%d (%a) '", 5,
 function(widget, output)
-    widget:set_markup(" " .. markup(theme.taglist_fg_focus, output))
+    widget:set_markup(" " ..  output)
 end)
 
 -- Time in Bucharest
@@ -210,10 +210,16 @@ function(widget, output)
     widget:set_markup(" " .. output .. " ")
 end)
 
+-- Time in UTC
+local time_in_utc = awful.widget.watch(shell .. " -c \"" .. "TZ=UTC date +'%R %Z '\"", 5,
+function(widget, output)
+    widget:set_markup(" " .. output .. " ")
+end)
+
 -- Local time
 local time = awful.widget.watch("date +'%R '", 5,
 function(widget, output)
-    widget:set_markup(" " .. markup(theme.taglist_fg_focus, output) )
+    widget:set_markup(" " .. output)
 end)
 
 -- Music
@@ -525,7 +531,14 @@ awful.screen.connect_for_each_screen(function(s)
 
 
     if s.index == 1 then
-        right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, date, time_in_bucharest, time })
+        local hostname = io.popen("uname -n"):read()
+        local date_widgets = {}
+
+        if hostname == "Nibbler" then
+            right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, time_in_bucharest, time_in_utc, date, time })
+        else
+            right_widgets = generate_right_section({ wibox.widget.systray(), vpn, mail, music, volume, mem, cpu, temp, bat, date, time })
+        end
     else
         right_widgets = generate_right_section({ date, time })
     end
